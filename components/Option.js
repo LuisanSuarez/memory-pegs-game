@@ -6,26 +6,29 @@ import axios from 'axios';
 // const cors = require('cors')
 
 //TODO: destructure here
-const Option = ({...props}) => {
+const Option = ({answer, id, sendAnswer}) => {
     const placeholderImage = 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.ebayimg.com%2Fimages%2Fi%2F172778278123-0-1%2Fs-l1000.jpg&f=1&nofb=1'
-    const {answer, id, sendAnswer} = props;
+    // const {answer, id, sendAnswer} = props;
     const [pegName, setPegName] = useState('give me a name');
     const [image, setImage] = useState(placeholderImage)
 
     let answerStr = answer.toString();
     answerStr = answer>99 ? answerStr.slice(1) : answerStr;
+    console.log("Mount: answer, id:", answer, id);
 
     useEffect(() => {
+        console.log("useEffect", answer, id);
         get({ "peg": answer })
-    }, [])
+    }, [id])
 
     const url = 'http://localhost:8000/';
     const get = (data) => {
+        console.log('Axios:', data);
         axios
             .get(url+'getImageUrl', {
                 params: data
             })
-            .then(res => setImage(res.data.data[0].imageURL ? res.data.data[0].imageURL : placeholderImage  ))
+            .then(res => setImage(res.data.data[0] ? res.data.data[0].imageURL : placeholderImage  ))
             .catch(err => console.log(err))
     }
     return (

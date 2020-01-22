@@ -9,7 +9,8 @@ const Options = ({...props}) => {
     const [options, setOptions] = useState([]);
 
     useEffect(() => {
-        setOptions(createOptions(optionsAmount));
+        console.log("newOptions:", newOptions);
+        newOptions ? setOptions(createOptions(optionsAmount)) : '';
         setNewOptions(false);
     }, [newOptions])
 
@@ -21,6 +22,7 @@ const Options = ({...props}) => {
     }
 
     const createOptions = optionsAmount => {
+        console.log("createOptions runs because newOptions is:", newOptions);
         let options = [];
         let randomNumber = Math.round(Math.random()*110);
         for (let i=0; i<optionsAmount-1; i++) {
@@ -35,6 +37,8 @@ const Options = ({...props}) => {
         //shuffle options order
         return options
     }
+    console.log("OPTIONS is Rendering");
+
     return (
         <>
             {/* <ImageUpload pegNumber={3} /> */}
