@@ -152,7 +152,7 @@ var OptionEditable = function OptionEditable(_ref) {
   pegNumberStr = id > 99 ? pegNumberStr.slice(1) : pegNumberStr;
   Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
     get({
-      "peg": pegNumberStr
+      "peg": id
     });
   }, []);
   var url = 'http://localhost:8000/'; // #################
@@ -221,6 +221,7 @@ var OptionEditable = function OptionEditable(_ref) {
 
 
   var get = function get(data) {
+    console.log("Data:", data);
     axios__WEBPACK_IMPORTED_MODULE_3___default.a.get(url + 'getImageUrl', {
       params: data
     }).then(function (res) {
@@ -248,13 +249,10 @@ var OptionEditable = function OptionEditable(_ref) {
   };
 
   var handleChange = function handleChange(e) {
-    console.log(e.target.value);
     setPegName(e.target.value);
   };
 
   var uploadAcceptedFiles = function uploadAcceptedFiles(acceptedFiles) {
-    console.log(acceptedFiles);
-    console.log("we'll run some axios call here to our server our cloudinary");
     handleFiles(acceptedFiles);
   };
 
@@ -265,7 +263,7 @@ var OptionEditable = function OptionEditable(_ref) {
     },
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 143
+      lineNumber: 141
     },
     __self: this
   }, __jsx("form", {
@@ -278,7 +276,7 @@ var OptionEditable = function OptionEditable(_ref) {
     },
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 144
+      lineNumber: 142
     },
     __self: this
   }, __jsx("input", {
@@ -290,7 +288,7 @@ var OptionEditable = function OptionEditable(_ref) {
     value: pegName,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 147
+      lineNumber: 145
     },
     __self: this
   })), __jsx("img", {
@@ -303,13 +301,13 @@ var OptionEditable = function OptionEditable(_ref) {
     },
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 154
+      lineNumber: 152
     },
     __self: this
   }), __jsx("h4", {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 155
+      lineNumber: 153
     },
     __self: this
   }, pegNumberStr), __jsx(react_dropzone__WEBPACK_IMPORTED_MODULE_4__["default"], {
@@ -318,7 +316,7 @@ var OptionEditable = function OptionEditable(_ref) {
     },
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 156
+      lineNumber: 154
     },
     __self: this
   }, function (_ref2) {
@@ -327,25 +325,25 @@ var OptionEditable = function OptionEditable(_ref) {
     return __jsx("section", {
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 158
+        lineNumber: 156
       },
       __self: this
     }, __jsx("div", Object(_babel_runtime_corejs2_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, getRootProps(), {
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 159
+        lineNumber: 157
       },
       __self: this
     }), __jsx("input", Object(_babel_runtime_corejs2_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, getInputProps(), {
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 160
+        lineNumber: 158
       },
       __self: this
     })), __jsx("p", {
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 161
+        lineNumber: 159
       },
       __self: this
     }, "Drag 'n' drop some files here, or click to select files")));

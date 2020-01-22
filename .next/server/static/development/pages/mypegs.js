@@ -225,7 +225,7 @@ const OptionEditable = (_ref) => {
   pegNumberStr = id > 99 ? pegNumberStr.slice(1) : pegNumberStr;
   Object(react__WEBPACK_IMPORTED_MODULE_2__["useEffect"])(() => {
     get({
-      "peg": pegNumberStr
+      "peg": id
     });
   }, []);
   const url = 'http://localhost:8000/'; // #################
@@ -294,6 +294,7 @@ const OptionEditable = (_ref) => {
 
 
   const get = data => {
+    console.log("Data:", data);
     axios__WEBPACK_IMPORTED_MODULE_4___default.a.get(url + 'getImageUrl', {
       params: data
     }).then(res => {
@@ -321,13 +322,10 @@ const OptionEditable = (_ref) => {
   };
 
   const handleChange = e => {
-    console.log(e.target.value);
     setPegName(e.target.value);
   };
 
   const uploadAcceptedFiles = acceptedFiles => {
-    console.log(acceptedFiles);
-    console.log("we'll run some axios call here to our server our cloudinary");
     handleFiles(acceptedFiles);
   };
 
@@ -336,7 +334,7 @@ const OptionEditable = (_ref) => {
     onPointerDown: () => "",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 143
+      lineNumber: 141
     },
     __self: undefined
   }, __jsx("form", {
@@ -347,7 +345,7 @@ const OptionEditable = (_ref) => {
     onBlur: e => handleSubmit(e),
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 144
+      lineNumber: 142
     },
     __self: undefined
   }, __jsx("input", {
@@ -357,7 +355,7 @@ const OptionEditable = (_ref) => {
     value: pegName,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 147
+      lineNumber: 145
     },
     __self: undefined
   })), __jsx("img", {
@@ -370,20 +368,20 @@ const OptionEditable = (_ref) => {
     },
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 154
+      lineNumber: 152
     },
     __self: undefined
   }), __jsx("h4", {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 155
+      lineNumber: 153
     },
     __self: undefined
   }, pegNumberStr), __jsx(react_dropzone__WEBPACK_IMPORTED_MODULE_5___default.a, {
     onDrop: acceptedFiles => uploadAcceptedFiles(acceptedFiles),
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 156
+      lineNumber: 154
     },
     __self: undefined
   }, ({
@@ -392,25 +390,25 @@ const OptionEditable = (_ref) => {
   }) => __jsx("section", {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 158
+      lineNumber: 156
     },
     __self: undefined
   }, __jsx("div", Object(_babel_runtime_corejs2_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, getRootProps(), {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 159
+      lineNumber: 157
     },
     __self: undefined
   }), __jsx("input", Object(_babel_runtime_corejs2_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, getInputProps(), {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 160
+      lineNumber: 158
     },
     __self: undefined
   })), __jsx("p", {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 161
+      lineNumber: 159
     },
     __self: undefined
   }, "Drag 'n' drop some files here, or click to select files"))))));
