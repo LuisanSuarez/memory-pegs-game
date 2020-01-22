@@ -217,15 +217,12 @@ class ImageUpload extends react__WEBPACK_IMPORTED_MODULE_1___default.a.Component
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _babel_runtime_corejs2_core_js_object_assign__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime-corejs2/core-js/object/assign */ "./node_modules/@babel/runtime-corejs2/core-js/object/assign.js");
-/* harmony import */ var _babel_runtime_corejs2_core_js_object_assign__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_corejs2_core_js_object_assign__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! axios */ "axios");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_2__);
-
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "axios");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
 var _jsxFileName = "C:\\Users\\luisa\\OneDrive\\LuisAngel\\Code\\Memory Pegs\\memory-pegs-game\\components\\Option.js";
-var __jsx = react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement;
+var __jsx = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement;
 
  // const express = require('express')
 // const cloudinary = require('cloudinary')
@@ -233,55 +230,56 @@ var __jsx = react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement;
 // const cors = require('cors')
 //TODO: destructure here
 
-const Option = (_ref) => {
-  let props = _babel_runtime_corejs2_core_js_object_assign__WEBPACK_IMPORTED_MODULE_0___default()({}, _ref);
+const Option = ({
+  answer,
+  id,
+  sendAnswer
+}) => {
+  const placeholderImage = 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.ebayimg.com%2Fimages%2Fi%2F172778278123-0-1%2Fs-l1000.jpg&f=1&nofb=1'; // const {answer, id, sendAnswer} = props;
 
-  const placeholderImage = 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.ebayimg.com%2Fimages%2Fi%2F172778278123-0-1%2Fs-l1000.jpg&f=1&nofb=1';
-  const {
-    answer,
-    id,
-    sendAnswer
-  } = props;
   const {
     0: pegName,
     1: setPegName
-  } = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])('give me a name');
+  } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])('give me a name');
   const {
     0: image,
     1: setImage
-  } = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(placeholderImage);
+  } = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(placeholderImage);
   let answerStr = answer.toString();
   answerStr = answer > 99 ? answerStr.slice(1) : answerStr;
-  Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(() => {
+  console.log("Mount: answer, id:", answer, id);
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(() => {
+    console.log("useEffect", answer, id);
     get({
       "peg": answer
     });
-  }, []);
+  }, [id]);
   const url = 'http://localhost:8000/';
 
   const get = data => {
-    axios__WEBPACK_IMPORTED_MODULE_2___default.a.get(url + 'getImageUrl', {
+    console.log('Axios:', data);
+    axios__WEBPACK_IMPORTED_MODULE_1___default.a.get(url + 'getImageUrl', {
       params: data
-    }).then(res => setImage(res.data.data[0].imageURL ? res.data.data[0].imageURL : placeholderImage)).catch(err => console.log(err));
+    }).then(res => setImage(res.data.data[0] ? res.data.data[0].imageURL : placeholderImage)).catch(err => console.log(err));
   };
 
-  return __jsx(react__WEBPACK_IMPORTED_MODULE_1___default.a.Fragment, null, __jsx("div", {
+  return __jsx(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, __jsx("div", {
     onPointerDown: () => sendAnswer(answer),
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 33
+      lineNumber: 36
     },
     __self: undefined
   }, __jsx("h1", {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 34
+      lineNumber: 37
     },
     __self: undefined
   }, pegName), __jsx("h1", {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 35
+      lineNumber: 38
     },
     __self: undefined
   }, answerStr), __jsx("img", {
@@ -292,7 +290,7 @@ const Option = (_ref) => {
     },
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 36
+      lineNumber: 39
     },
     __self: undefined
   }), "Send me as answer!"));
@@ -341,7 +339,8 @@ const Options = (_ref) => {
     1: setOptions
   } = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])([]);
   Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(() => {
-    setOptions(createOptions(optionsAmount));
+    console.log("newOptions:", newOptions);
+    newOptions ? setOptions(createOptions(optionsAmount)) : '';
     setNewOptions(false);
   }, [newOptions]);
 
@@ -353,6 +352,7 @@ const Options = (_ref) => {
   };
 
   const createOptions = optionsAmount => {
+    console.log("createOptions runs because newOptions is:", newOptions);
     let options = [];
     let randomNumber = Math.round(Math.random() * 110);
 
@@ -367,7 +367,7 @@ const Options = (_ref) => {
         sendAnswer: sendAnswer,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 31
+          lineNumber: 33
         },
         __self: undefined
       }));
@@ -379,7 +379,7 @@ const Options = (_ref) => {
       sendAnswer: sendAnswer,
       __source: {
         fileName: _jsxFileName,
-        lineNumber: 33
+        lineNumber: 35
       },
       __self: undefined
     }));
@@ -388,6 +388,7 @@ const Options = (_ref) => {
     return options;
   };
 
+  console.log("OPTIONS is Rendering");
   return __jsx(react__WEBPACK_IMPORTED_MODULE_1___default.a.Fragment, null, options);
 };
 
@@ -562,6 +563,7 @@ const Game = () => {
     setAnswer(Math.round(Math.random() * 110));
   };
 
+  console.log("Game is Rendering:", newOptions);
   return __jsx(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, __jsx("h1", {
     __source: {
       fileName: _jsxFileName,

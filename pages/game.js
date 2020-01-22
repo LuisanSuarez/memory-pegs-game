@@ -20,7 +20,7 @@ const Game = () => {
         setNewOptions(true);
         setAnswer(Math.round(Math.random()*110))
     }
-
+    console.log("Game is Rendering:", newOptions);
     return (
         <>
             <h1>Memory Game</h1>
