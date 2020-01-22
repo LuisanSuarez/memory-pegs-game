@@ -184,51 +184,120 @@ class ImageUpload extends react__WEBPACK_IMPORTED_MODULE_1___default.a.Component
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _babel_runtime_corejs2_core_js_object_assign__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime-corejs2/core-js/object/assign */ "./node_modules/@babel/runtime-corejs2/core-js/object/assign.js");
-/* harmony import */ var _babel_runtime_corejs2_core_js_object_assign__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_corejs2_core_js_object_assign__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _ImageUpload__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ImageUpload */ "./components/ImageUpload.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! axios */ "axios");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _babel_runtime_corejs2_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime-corejs2/helpers/esm/extends */ "./node_modules/@babel/runtime-corejs2/helpers/esm/extends.js");
+/* harmony import */ var _babel_runtime_corejs2_core_js_object_assign__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime-corejs2/core-js/object/assign */ "./node_modules/@babel/runtime-corejs2/core-js/object/assign.js");
+/* harmony import */ var _babel_runtime_corejs2_core_js_object_assign__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_corejs2_core_js_object_assign__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _ImageUpload__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ImageUpload */ "./components/ImageUpload.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! axios */ "axios");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var react_dropzone__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-dropzone */ "react-dropzone");
+/* harmony import */ var react_dropzone__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react_dropzone__WEBPACK_IMPORTED_MODULE_5__);
+
 
 var _jsxFileName = "C:\\Users\\luisa\\OneDrive\\LuisAngel\\Code\\Memory Pegs\\memory-pegs-game\\components\\OptionEditable.js";
-var __jsx = react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement;
+var __jsx = react__WEBPACK_IMPORTED_MODULE_2___default.a.createElement;
+
 
 
 
 
 const OptionEditable = (_ref) => {
-  let props = _babel_runtime_corejs2_core_js_object_assign__WEBPACK_IMPORTED_MODULE_0___default()({}, _ref);
+  let props = _babel_runtime_corejs2_core_js_object_assign__WEBPACK_IMPORTED_MODULE_1___default()({}, _ref);
 
   const placeholderImage = 'https://apod.nasa.gov/apod/image/2001/22466-22467anaVantuyne900.jpg';
   const placeholderName = 'add a name to this peg';
   const {
     id
-  } = props;
+  } = props; //TODO: useReducer?
+
   const {
     0: image,
     1: setImage
-  } = Object(react__WEBPACK_IMPORTED_MODULE_1__["useReducer"])(placeholderImage);
+  } = Object(react__WEBPACK_IMPORTED_MODULE_2__["useState"])(placeholderImage);
   const {
     0: pegName,
     1: setPegName
-  } = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(placeholderName); //placeholder image
+  } = Object(react__WEBPACK_IMPORTED_MODULE_2__["useState"])(placeholderName); //placeholder image
 
   let pegNumberStr = id.toString();
   pegNumberStr = id > 99 ? pegNumberStr.slice(1) : pegNumberStr;
-  Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(() => {
+  Object(react__WEBPACK_IMPORTED_MODULE_2__["useEffect"])(() => {
     get({
       "peg": pegNumberStr
     });
   }, []);
-  const url = 'http://localhost:8000/'; //TODO: refactor as HOCs / 'container component pattern'
+  const url = 'http://localhost:8000/'; // #################
+  //CLOUDINARY UPLOAD
+  // #################
+  //stolen from: https://codepen.io/team/Cloudinary/pen/QgpyOK
+
+  const cloudName = 'luisan';
+  const unsignedUploadPreset = 'jufwcv6o'; // *********** Upload file to Cloudinary ******************** //
+
+  function uploadFile(file) {
+    var url = `https://api.cloudinary.com/v1_1/${cloudName}/upload`;
+    var xhr = new XMLHttpRequest();
+    var fd = new FormData();
+    xhr.open('POST', url, true);
+    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest'); //TODO: add a progress bar (you find it in the original codepen link, up top)
+
+    xhr.onreadystatechange = function (e) {
+      if (xhr.readyState == 4 && xhr.status == 200) {
+        var response = JSON.parse(xhr.responseText);
+        var url = response.secure_url;
+        const serverUrl = 'http://localhost:8000/';
+        const data = {
+          peg: id,
+          imageURL: url,
+          pegName: pegName
+        };
+        console.log("Data:", data);
+        axios__WEBPACK_IMPORTED_MODULE_4___default.a.put(serverUrl + 'updateData', data).then(res => {
+          //   console.log('AXIOS GET RUNNING:', res);
+          const imageURL = JSON.parse(res.config.data).imageURL;
+          console.log("imageURL:", imageURL);
+          setImage(imageURL); //   console.log(JSON.parse(res.config.data).imageURL);
+          //   console.log('hopefully I"m refreshing the new image');
+        }).catch(err => {
+          console.log(err);
+        }); // setTimeout(() => {
+        //     get({ "peg": pegNumberStr });
+        //     console.log("TIMEOUT GET RUNS");
+        //  }, 10000);
+        // Create a thumbnail of the uploaded image, with 150px width
+        // TODO: use the thumbnail created here to upload that instead of the huge image ;)))
+        // var tokens = url.split('/');
+        // tokens.splice(-2, 0, 'w_150,c_scale');
+      }
+    };
+
+    fd.append('upload_preset', unsignedUploadPreset);
+    fd.append('tags', 'browser_upload'); // Optional - add tag for image admin in Cloudinary
+
+    fd.append('file', file);
+    xhr.send(fd);
+  } // *********** Handle selected files ******************** //
+
+
+  var handleFiles = function (files) {
+    for (var i = 0; i < files.length; i++) {
+      console.log(`this ran ${i} times`);
+      uploadFile(files[i]); // call the function to upload the file
+    }
+  }; // #############
+  //CLOUDINARY UPLOAD END
+  // #############
+  //TODO: refactor as HOCs / 'container component pattern'
   //TODO: use a container to handle the logic
 
+
   const get = data => {
-    axios__WEBPACK_IMPORTED_MODULE_3___default.a.get(url + 'getImageUrl', {
+    axios__WEBPACK_IMPORTED_MODULE_4___default.a.get(url + 'getImageUrl', {
       params: data
     }).then(res => {
+      // console.log("From GET():", res.data.data)
       setImage(res.data.data[0].imageURL ? res.data.data[0].imageURL : placeholderImage);
       setPegName(res.data.data[0].pegName ? res.data.data[0].pegName : placeholderName);
     }).catch(err => {// console.log("this is where it's at:", err)
@@ -242,10 +311,10 @@ const OptionEditable = (_ref) => {
       peg: id,
       pegName: pegName
     };
-    axios__WEBPACK_IMPORTED_MODULE_3___default.a.put(url + 'updateData', data).then(res => {
-      console.log("put res:", res);
-      get();
-      console.log('RAN GET');
+    axios__WEBPACK_IMPORTED_MODULE_4___default.a.put(url + 'updateData', data).then(res => {
+      const pegName = JSON.parse(res.config.data).pegName;
+      console.log("pegName:", pegName);
+      setPegName(pegName);
     }).catch(err => {
       console.log(err);
     });
@@ -256,12 +325,18 @@ const OptionEditable = (_ref) => {
     setPegName(e.target.value);
   };
 
-  return __jsx(react__WEBPACK_IMPORTED_MODULE_1___default.a.Fragment, null, __jsx("div", {
+  const uploadAcceptedFiles = acceptedFiles => {
+    console.log(acceptedFiles);
+    console.log("we'll run some axios call here to our server our cloudinary");
+    handleFiles(acceptedFiles);
+  };
+
+  return __jsx(react__WEBPACK_IMPORTED_MODULE_2___default.a.Fragment, null, __jsx("div", {
     class: "option-card",
     onPointerDown: () => "",
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 65
+      lineNumber: 143
     },
     __self: undefined
   }, __jsx("form", {
@@ -272,7 +347,7 @@ const OptionEditable = (_ref) => {
     onBlur: e => handleSubmit(e),
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 66
+      lineNumber: 144
     },
     __self: undefined
   }, __jsx("input", {
@@ -282,7 +357,7 @@ const OptionEditable = (_ref) => {
     value: pegName,
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 69
+      lineNumber: 147
     },
     __self: undefined
   })), __jsx("img", {
@@ -295,25 +370,50 @@ const OptionEditable = (_ref) => {
     },
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 76
+      lineNumber: 154
     },
     __self: undefined
   }), __jsx("h4", {
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 77
+      lineNumber: 155
     },
     __self: undefined
-  }, pegNumberStr), __jsx(_ImageUpload__WEBPACK_IMPORTED_MODULE_2__["default"], {
-    peg: id,
-    update: get,
-    pegName: pegName,
+  }, pegNumberStr), __jsx(react_dropzone__WEBPACK_IMPORTED_MODULE_5___default.a, {
+    onDrop: acceptedFiles => uploadAcceptedFiles(acceptedFiles),
     __source: {
       fileName: _jsxFileName,
-      lineNumber: 78
+      lineNumber: 156
     },
     __self: undefined
-  })));
+  }, ({
+    getRootProps,
+    getInputProps
+  }) => __jsx("section", {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 158
+    },
+    __self: undefined
+  }, __jsx("div", Object(_babel_runtime_corejs2_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, getRootProps(), {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 159
+    },
+    __self: undefined
+  }), __jsx("input", Object(_babel_runtime_corejs2_helpers_esm_extends__WEBPACK_IMPORTED_MODULE_0__["default"])({}, getInputProps(), {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 160
+    },
+    __self: undefined
+  })), __jsx("p", {
+    __source: {
+      fileName: _jsxFileName,
+      lineNumber: 161
+    },
+    __self: undefined
+  }, "Drag 'n' drop some files here, or click to select files"))))));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (OptionEditable);
@@ -368,6 +468,39 @@ function _defineProperty(obj, key, value) {
   }
 
   return obj;
+}
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime-corejs2/helpers/esm/extends.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/@babel/runtime-corejs2/helpers/esm/extends.js ***!
+  \********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return _extends; });
+/* harmony import */ var _core_js_object_assign__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../core-js/object/assign */ "./node_modules/@babel/runtime-corejs2/core-js/object/assign.js");
+/* harmony import */ var _core_js_object_assign__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_core_js_object_assign__WEBPACK_IMPORTED_MODULE_0__);
+
+function _extends() {
+  _extends = _core_js_object_assign__WEBPACK_IMPORTED_MODULE_0___default.a || function (target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i];
+
+      for (var key in source) {
+        if (Object.prototype.hasOwnProperty.call(source, key)) {
+          target[key] = source[key];
+        }
+      }
+    }
+
+    return target;
+  };
+
+  return _extends.apply(this, arguments);
 }
 
 /***/ }),
@@ -469,6 +602,17 @@ module.exports = require("core-js/library/fn/object/define-property");
 /***/ (function(module, exports) {
 
 module.exports = require("react");
+
+/***/ }),
+
+/***/ "react-dropzone":
+/*!*********************************!*\
+  !*** external "react-dropzone" ***!
+  \*********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = require("react-dropzone");
 
 /***/ })
 
