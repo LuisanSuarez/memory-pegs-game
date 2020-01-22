@@ -17,7 +17,7 @@ const OptionEditable = ({...props}) => {
     pegNumberStr = id>99 ? pegNumberStr.slice(1) : pegNumberStr;
 
     useEffect(() => {
-        get({ "peg": pegNumberStr })
+        get({ "peg": id })
     }, [])
 
     const url = 'http://localhost:8000/';
@@ -94,6 +94,7 @@ var handleFiles = function(files) {
 //TODO: refactor as HOCs / 'container component pattern'
 //TODO: use a container to handle the logic
 const get = (data) => {
+    console.log("Data:", data);
     axios
     .get(url+'getImageUrl', {
         params: data
@@ -128,13 +129,10 @@ const get = (data) => {
     }
 
     const handleChange = (e) => {
-        console.log(e.target.value);
         setPegName(e.target.value)
     }
 
     const uploadAcceptedFiles = (acceptedFiles) => {
-        console.log(acceptedFiles)
-        console.log("we'll run some axios call here to our server our cloudinary");
         handleFiles(acceptedFiles)
     }
 
