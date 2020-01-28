@@ -1,20 +1,25 @@
-import Link from "next/link"; //client-side routing components
-import PropTypes from "prop-types";
+import React from "react";
+import Link from "next/link";
+import { useAuth0 } from "../react-auth0-spa.js";
+// console.log("Auth0:", useAuth0);
+const NavBar = () => {
+  const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
 
-const Header = props => {
-  const { isLoggedIn } = props;
   return (
     <div>
+      {!isAuthenticated && (
+        <button onClick={() => loginWithRedirect({})}>Log in</button>
+      )}
+
+      {isAuthenticated && <button onClick={() => logout()}>Log out</button>}
+    </div>
+    <div>
+      // ... some inline styles
       <nav>
         <ul>
           <li>
             <Link href="/">
               <a>Home</a>
-            </Link>
-          </li>
-          <li>
-            <Link href="/game">
-              <a>Game</a>
             </Link>
           </li>
           <li>
@@ -50,8 +55,5 @@ const Header = props => {
     </div>
   );
 };
-Header.propTypes = {
-  isLoggedIn: PropTypes.bool
-};
 
-export default Header;
+export default NavBar;
