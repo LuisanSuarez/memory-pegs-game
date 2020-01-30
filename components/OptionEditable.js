@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useReducer, useCallback } from "react";
-import ImageUpload from "./ImageUpload";
 import axios from "axios";
 import Dropzone from "react-dropzone";
+import { productionUrl, devUrl } from "../globalVariables";
 
 const OptionEditable = ({ ...props }) => {
   const placeholderImage =
@@ -20,7 +20,7 @@ const OptionEditable = ({ ...props }) => {
     get({ peg: id });
   }, []);
 
-  const url = "http://localhost:8000/";
+  const url = process.env.NODE_ENV !== "production" ? devUrl : productionUrl;
 
   // #################
   //CLOUDINARY UPLOAD

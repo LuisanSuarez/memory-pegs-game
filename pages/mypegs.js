@@ -1,11 +1,12 @@
 import React from "react";
-import template from "../static/template";
+import SecureTemplate from "../static/secure-template";
 import OptionEditable from "../components/OptionEditable";
 import axios from "axios";
+import { productionUrl, devUrl } from "../globalVariables";
 
 const PegsDisplay = ({ loggedInUser }) => {
-  console.log("Pegs:", loggedInUser);
-  const url = "http://localhost:8000/";
+  console.log("NODE_ENV:", process.env.NODE_ENV);
+  const url = false ? devUrl : productionUrl;
   axios
     .post(url + "setCollection", loggedInUser)
     .then(res => console.log(res))
@@ -26,4 +27,4 @@ const PegsDisplay = ({ loggedInUser }) => {
   );
 };
 
-export default template(PegsDisplay);
+export default SecureTemplate(PegsDisplay);
