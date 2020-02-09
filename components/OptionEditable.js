@@ -1,17 +1,15 @@
 import React, { useState, useEffect, useReducer, useCallback } from "react";
 import axios from "axios";
 import Dropzone from "react-dropzone";
-import { productionUrl, devUrl } from "../globalVariables";
+import { productionUrlServer, devUrlServer } from "../globalVariables";
 
-const OptionEditable = ({ ...props }) => {
+const OptionEditable = ({ id }) => {
   const placeholderImage =
-    "https://apod.nasa.gov/apod/image/2001/22466-22467anaVantuyne900.jpg";
+    "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.ebayimg.com%2Fimages%2Fi%2F172778278123-0-1%2Fs-l1000.jpg&f=1&nofb=1";
   const placeholderName = "add a name to this peg";
-  const { id } = props;
   //TODO: useReducer?
   const [image, setImage] = useState(placeholderImage);
   const [pegName, setPegName] = useState(placeholderName);
-  //placeholder image
   let pegNumberStr = id.toString();
 
   pegNumberStr = id > 99 ? pegNumberStr.slice(1) : pegNumberStr;
@@ -20,86 +18,20 @@ const OptionEditable = ({ ...props }) => {
     get({ peg: id });
   }, []);
 
-  const url = process.env.NODE_ENV !== "production" ? devUrl : productionUrl;
-
-  // #################
-  //CLOUDINARY UPLOAD
-  // #################
-  //stolen from: https://codepen.io/team/Cloudinary/pen/QgpyOK
-  const cloudName = "luisan";
-  const unsignedUploadPreset = "jufwcv6o";
-
-  // *********** Upload file to Cloudinary ******************** //
-  function uploadFile(file) {
-    var url = `https://api.cloudinary.com/v1_1/${cloudName}/upload`;
-    var xhr = new XMLHttpRequest();
-    var fd = new FormData();
-    xhr.open("POST", url, true);
-    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-
-    //TODO: add a progress bar (you find it in the original codepen link, up top)
-
-    xhr.onreadystatechange = function(e) {
-      if (xhr.readyState == 4 && xhr.status == 200) {
-        var response = JSON.parse(xhr.responseText);
-        var url = response.secure_url;
-        const serverUrl = "http://localhost:8000/";
-        const data = {
-          peg: id,
-          imageURL: url,
-          pegName: pegName
-        };
-        // console.log("Data:", data);
-        axios
-          .put(serverUrl + "updateData", data)
-          .then(res => {
-            //   console.log('AXIOS GET RUNNING:', res);
-            const imageURL = JSON.parse(res.config.data).imageURL;
-            console.log("imageURL:", imageURL);
-            setImage(imageURL);
-            //   console.log(JSON.parse(res.config.data).imageURL);
-            //   console.log('hopefully I"m refreshing the new image');
-          })
-          .catch(err => {
-            console.log(err);
-          });
-        // setTimeout(() => {
-        //     get({ "peg": pegNumberStr });
-        //     console.log("TIMEOUT GET RUNS");
-        //  }, 10000);
-        // Create a thumbnail of the uploaded image, with 150px width
-        // TODO: use the thumbnail created here to upload that instead of the huge image ;)))
-        // var tokens = url.split('/');
-        // tokens.splice(-2, 0, 'w_150,c_scale');
-      }
-    };
-    fd.append("upload_preset", unsignedUploadPreset);
-    fd.append("tags", "browser_upload"); // Optional - add tag for image admin in Cloudinary
-    fd.append("file", file);
-    xhr.send(fd);
-  }
-
-  // *********** Handle selected files ******************** //
-  var handleFiles = function(files) {
-    for (var i = 0; i < files.length; i++) {
-      console.log(`this ran ${i} times`);
-      uploadFile(files[i]); // call the function to upload the file
-    }
-  };
-  // #############
-  //CLOUDINARY UPLOAD END
-  // #############
+  const url =
+    process.env.NODE_ENV !== "production" ? devUrlServer : productionUrlServer;
+  // productionUrlServer;
+  id == 0 ? console.log(`${process.env.NODE_ENV} url: ${url}`) : "";
 
   //TODO: refactor as HOCs / 'container component pattern'
   //TODO: use a container to handle the logic
   const get = data => {
-    // console.log("Data:", data);
     axios
       .get(url + "getImageUrl", {
         params: data
       })
       .then(res => {
-        // console.log("From GET():", res.data.data)
+        id == 0 ? console.log(res) : " ";
         setImage(
           res.data.data[0].imageURL
             ? res.data.data[0].imageURL
@@ -110,13 +42,16 @@ const OptionEditable = ({ ...props }) => {
         );
       })
       .catch(err => {
-        // console.log("this is where it's at:", err)
+        if (id == 0) {
+          console.log("Error:", err);
+        } else {
+          console.log("Err");
+        }
       });
   };
 
   const handleSubmit = e => {
     e.preventDefault();
-    console.log("we'll post:", pegName, "for peg no.", id);
     const data = {
       peg: id,
       pegName: pegName
@@ -129,7 +64,7 @@ const OptionEditable = ({ ...props }) => {
         setPegName(pegName);
       })
       .catch(err => {
-        console.log(err);
+        peg.console.log(err);
       });
   };
 
@@ -140,10 +75,70 @@ const OptionEditable = ({ ...props }) => {
   const uploadAcceptedFiles = acceptedFiles => {
     handleFiles(acceptedFiles);
   };
+  // #################
+  //UPLOAD TO CLOUDINARY
+  // #################
+  //stolen from: https://codepen.io/team/Cloudinary/pen/QgpyOK
+
+  const cloudName = "luisan";
+  const unsignedUploadPreset = "jufwcv6o";
+
+  // *********** Upload file to Cloudinary ******************** //
+  function uploadFile(file) {
+    const url = `https://api.cloudinary.com/v1_1/${cloudName}/upload`;
+    const xhr = new XMLHttpRequest();
+    const fd = new FormData();
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+
+    //TODO: add a progress bar (you find it in the original codepen link, up top)
+
+    xhr.onreadystatechange = function(e) {
+      if (xhr.readyState == 4 && xhr.status == 200) {
+        const response = JSON.parse(xhr.responseText);
+        const url = response.secure_url;
+        const serverUrl =
+          process.env.NODE_ENV !== "production"
+            ? devUrlServer
+            : productionUrlServer;
+        const data = {
+          peg: id,
+          imageURL: url,
+          pegName: pegName
+        };
+        axios
+          .put(serverUrl + "updateData", data)
+          .then(res => {
+            const imageURL = JSON.parse(res.config.data).imageURL;
+            setImage(imageURL);
+          })
+          .catch(err => {
+            id == 1 ? console.log(err) : "";
+          });
+        // Create a thumbnail of the uploaded image, with 150px width
+        // TODO: use the thumbnail created here to upload that instead of the huge image ;)))
+        // const tokens = url.split('/');
+        // tokens.splice(-2, 0, 'w_150,c_scale');
+      }
+    };
+    fd.append("upload_preset", unsignedUploadPreset);
+    fd.append("tags", "browser_upload"); // Optional - add tag for image admin in Cloudinary
+    fd.append("file", file);
+    xhr.send(fd);
+  }
+
+  const handleFiles = function(files) {
+    for (let i = 0; i < files.length; i++) {
+      uploadFile(files[i]); // call the function to upload the file
+    }
+  };
+  // #############
+  //CLOUDINARY UPLOAD END
+  // #############
 
   return (
     <>
-      <div class="option-card" onPointerDown={() => ""}>
+      <div className="option-card" onPointerDown={() => ""}>
         <form
           onSubmit={e => {
             e.preventDefault();

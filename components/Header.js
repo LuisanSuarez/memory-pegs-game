@@ -1,12 +1,33 @@
 import Link from "next/link"; //client-side routing components
 import PropTypes from "prop-types";
+import { SPACING } from "../assets/css/globalStyles";
+// import "../assets/css/header.css";
 
-const Header = props => {
-  const { isLoggedIn } = props;
+const headerContainer = {
+  paddingBottom: SPACING.header
+};
+
+const header = {
+  display: "flex",
+  position: "fixed",
+  width: "99vw",
+  top: "0"
+};
+
+const navItems = {
+  display: "flex",
+  width: "100%",
+  flexDirection: "row",
+  backgroundColor: "orange",
+  margin: 0,
+  height: SPACING.header
+};
+
+const Header = ({ isLoggedIn }) => {
   return (
-    <div>
-      <nav>
-        <ul>
+    <div style={headerContainer}>
+      <nav style={header}>
+        <ul style={navItems}>
           <li>
             <Link href="/">
               <a>Home</a>
@@ -18,14 +39,14 @@ const Header = props => {
             </Link>
           </li>
           <li>
-            <Link href="/public">
-              <a>Public</a>
+            <Link href="/mypegs">
+              <a>Your Pegs</a>
             </Link>
           </li>
           {isLoggedIn ? (
             <li>
-              <Link href="/secret">
-                <a>Secret</a>
+              <Link href="/settings">
+                <a>Settings</a>
               </Link>
             </li>
           ) : (
@@ -46,7 +67,6 @@ const Header = props => {
           )}
         </ul>
       </nav>
-      <h1>Auth0 & Next.js</h1>
     </div>
   );
 };

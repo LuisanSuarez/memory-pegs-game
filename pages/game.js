@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
-import template from "../static/template";
 import QuestionCard from "../components/QuestionCard";
 import ComboTracker from "../components/ComboTracker";
 import Options from "../components/Options";
-import Header from "../components/Header";
+import secureTemplate from "../static/secure-template";
 
 const Game = () => {
   const [optionsAmount, setOptionsAmount] = useState(4);
-  const [answer, setAnswer] = useState(1);
+  const [answer, setAnswer] = useState(10);
   const [userAnswer, setUserAnswer] = useState(null);
   const [newOptions, setNewOptions] = useState(true);
   //on user input
@@ -43,4 +42,4 @@ const Game = () => {
   );
 };
 
-export default template(Game);
+export default secureTemplate(Game);

@@ -2,6 +2,7 @@
 //login(), logout(), parseHash()
 import auth0 from "auth0-js";
 import * as settings from "../settings";
+import { devLoginUri, productionLoginUri } from "../globalVariables";
 
 const clientID = settings.clientID;
 const domain = settings.domain;
@@ -17,11 +18,16 @@ function webAuth(clientID, domain) {
 }
 
 function login() {
+  console.log("login:", process.env.NODE_ENV !== "production");
   const options = {
     responseType: "id_token code token",
-    redirectUri: "http://localhost:3000/redirect",
+    redirectUri: `${
+      process.env.NODE_ENV !== "production" ? devLoginUri : productionLoginUri
+    }/redirect`,
     scope: "openid profile email"
   };
+
+  console.log("options:", options);
 
   return webAuth(clientID, domain).authorize(options);
 }

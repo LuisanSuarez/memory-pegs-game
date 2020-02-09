@@ -2,11 +2,6 @@ import React from "react";
 import Header from "../components/Header";
 import { getTokenForBrowser, getTokenForServer } from "../static/auth";
 
-const style = {
-  background: "gray",
-  color: "black"
-};
-
 export default Page =>
   class Template extends React.Component {
     static async getInitialProps({ req }) {
@@ -27,9 +22,8 @@ export default Page =>
     }
 
     render() {
-      console.log("Template:", Object.keys(this.props));
       return (
-        <div style={style}>
+        <div>
           <Header {...this.props} />
           <Page {...this.props} />
         </div>

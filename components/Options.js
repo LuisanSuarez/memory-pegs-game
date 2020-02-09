@@ -1,6 +1,15 @@
 import React, { useEffect, useState } from "react";
 import Option from "./Option";
-import ImageUpload from "./ImageUpload";
+import { COLOR } from "../assets/css/globalStyles";
+
+const optionsCSS = {
+  display: "flex",
+  flexWrap: "wrap",
+  margin: "0 auto",
+  width: "500px",
+  justifyContent: "space-around",
+  background: COLOR.mainColorDark
+};
 
 //TODO: destructure here
 const Options = ({ ...props }) => {
@@ -22,7 +31,6 @@ const Options = ({ ...props }) => {
   };
 
   const createOptions = optionsAmount => {
-    console.log("createOptions runs because newOptions is:", newOptions);
     let options = [];
     let randomNumber = Math.round(Math.random() * 110);
     for (let i = 0; i < optionsAmount - 1; i++) {
@@ -42,11 +50,10 @@ const Options = ({ ...props }) => {
       <Option id={answer} answer={answer} sendAnswer={sendAnswer} />
     );
     shuffleArray(options);
-    //shuffle options order
     return options;
   };
 
-  return <>{options}</>;
+  return <div style={optionsCSS}>{options}</div>;
 };
 
 export default Options;

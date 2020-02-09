@@ -2,11 +2,11 @@ import React from "react";
 import SecureTemplate from "../static/secure-template";
 import OptionEditable from "../components/OptionEditable";
 import axios from "axios";
-import { productionUrl, devUrl } from "../globalVariables";
+import { productionUrlServer, devUrlServer } from "../globalVariables";
 
 const PegsDisplay = ({ loggedInUser }) => {
-  console.log("NODE_ENV:", process.env.NODE_ENV);
-  const url = false ? devUrl : productionUrl;
+  const url =
+    process.env.NODE_ENV !== "production" ? devUrlServer : productionUrlServer;
   axios
     .post(url + "setCollection", loggedInUser)
     .then(res => console.log(res))
