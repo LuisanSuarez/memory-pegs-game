@@ -1,9 +1,17 @@
 import React, { useState, useEffect } from "react";
+import { FONT_SIZE, COLOR, SPACING } from "../assets/css/globalStyles";
 
 const questionCard = {
   display: "flex",
   flexDirection: "column",
   alignItems: "center"
+};
+
+const questionCSS = {
+  fontSize: FONT_SIZE.H1,
+  color: COLOR.support1ColorLightest,
+  margin: "auto",
+  padding: SPACING.XL
 };
 
 const QuestionCard = ({ ...props }) => {
@@ -22,8 +30,8 @@ const QuestionCard = ({ ...props }) => {
   }
   return (
     <div style={questionCard}>
-      <h1>A React QuestionCard</h1>
-      <div>{questionNumberString}</div>
+      {/* <h1>A React QuestionCard</h1> */}
+      <h1 style={questionCSS}>{questionNumberString}</h1>
     </div>
   );
 };

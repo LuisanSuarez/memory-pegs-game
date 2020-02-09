@@ -1,6 +1,15 @@
 import React from "react";
 import Header from "../components/Header";
 import { getTokenForBrowser, getTokenForServer } from "../static/auth";
+import { COLOR } from "../assets/css/globalStyles";
+
+const templateCSS = {
+  background: COLOR.mainColorDark,
+  width: "100%",
+  minHeight: "100vh",
+  position: "absolute",
+  left: 0
+};
 
 export default Page =>
   class Template extends React.Component {
@@ -23,7 +32,7 @@ export default Page =>
 
     render() {
       return (
-        <div>
+        <div style={templateCSS}>
           <Header {...this.props} />
           <Page {...this.props} />
         </div>

@@ -76,6 +76,8 @@ export const FONT_SIZE = {
         @media (max-width: ${BREAKPOINTS.SM}) {
         fontSize: 28px;
       }`,
+  H1: "72px",
   H3: "36px",
+
   NORMAL: `font-size: 16px;`
 };

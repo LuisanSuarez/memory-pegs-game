@@ -12,13 +12,16 @@ const optionsCSS = {
 };
 
 //TODO: destructure here
-const Options = ({ ...props }) => {
-  const { optionsAmount, answer, sendAnswer, setNewOptions } = props;
-  const { newOptions } = props;
+const Options = ({
+  optionsAmount,
+  answer,
+  sendAnswer,
+  newOptions,
+  setNewOptions
+}) => {
   const [options, setOptions] = useState([]);
 
   useEffect(() => {
-    console.log("newOptions:", newOptions);
     newOptions ? setOptions(createOptions(optionsAmount)) : "";
     setNewOptions(false);
   }, [newOptions]);
@@ -32,12 +35,13 @@ const Options = ({ ...props }) => {
 
   const createOptions = optionsAmount => {
     let options = [];
+    let optionNumbers = [];
     let randomNumber = Math.round(Math.random() * 110);
     for (let i = 0; i < optionsAmount - 1; i++) {
       do {
         randomNumber = Math.round(Math.random() * 110);
-      } while (randomNumber === answer);
-
+      } while (randomNumber === answer || randomNumber in optionNumbers);
+      optionNumbers.push(randomNumber);
       options.push(
         <Option
           id={randomNumber}

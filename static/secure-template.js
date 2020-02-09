@@ -1,6 +1,15 @@
 import React from "react";
 import Header from "../components/Header";
 import { getTokenForBrowser, getTokenForServer } from "../static/auth";
+import { COLOR } from "../assets/css/globalStyles";
+
+const templateCSS = {
+  background: COLOR.mainColorDark,
+  width: "100%",
+  minHeight: "100vh",
+  position: "absolute",
+  left: 0
+};
 
 export default Page =>
   class SecureTemplate extends React.Component {
@@ -20,7 +29,7 @@ export default Page =>
     render() {
       if (!this.props.isLoggedIn) {
         return (
-          <div>
+          <div style={templateCSS}>
             <Header {...this.props} />
             <p>
               You're not authorised. Try to <a href="/login">Login</a>
@@ -29,7 +38,7 @@ export default Page =>
         );
       }
       return (
-        <div>
+        <div style={templateCSS}>
           <Header {...this.props} />
           <Page {...this.props} />
         </div>

@@ -7,13 +7,14 @@ import { productionUrlServer, devUrlServer } from "../globalVariables";
 const PegsDisplay = ({ loggedInUser }) => {
   const url =
     process.env.NODE_ENV !== "production" ? devUrlServer : productionUrlServer;
-  axios
-    .post(url + "setCollection", loggedInUser)
-    .then(res => console.log(res))
-    .catch(err => {
-      console.log("ERROR");
-      console.log(err);
-    });
+  console.log("setting pegs");
+  // axios
+  //   .post(url + "setCollection", loggedInUser)
+  //   .then(res => console.log(res))
+  //   .catch(err => {
+  //     console.log("ERROR");
+  //     console.log(err);
+  //   });
 
   return (
     <>
