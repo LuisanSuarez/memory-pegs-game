@@ -23,7 +23,6 @@ const Game = () => {
   console.log("Game is Rendering:", newOptions);
   return (
     <>
-      {/* <Header isLoggedIn={isLoggedIn} /> */}
       <QuestionCard
         questionNumber={answer}
         userAnswer={userAnswer}

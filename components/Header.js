@@ -1,6 +1,7 @@
 import Link from "next/link"; //client-side routing components
 import PropTypes from "prop-types";
 import { SPACING } from "../assets/css/globalStyles";
+import * as Icon from "react-feather";
 // import "../assets/css/header.css";
 
 const headerContainer = {
@@ -20,7 +21,8 @@ const navItems = {
   flexDirection: "row",
   backgroundColor: "orange",
   margin: 0,
-  height: SPACING.header
+  height: SPACING.header,
+  listStyle: "none"
 };
 
 const Header = ({ isLoggedIn }) => {
@@ -30,36 +32,48 @@ const Header = ({ isLoggedIn }) => {
         <ul style={navItems}>
           <li>
             <Link href="/">
-              <a>Home</a>
+              <a>
+                <Icon.Home />
+              </a>
             </Link>
           </li>
           <li>
             <Link href="/game">
-              <a>Game</a>
+              <a>
+                <Icon.PlayCircle />
+              </a>
             </Link>
           </li>
           <li>
             <Link href="/mypegs">
-              <a>Your Pegs</a>
+              <a>
+                <Icon.Edit3 />
+              </a>
             </Link>
           </li>
           {isLoggedIn ? (
             <li>
-              <Link href="/settings">
-                <a>Settings</a>
-              </Link>
+              {/* <Link href="/settings">
+                <a>
+                  <Icon.Settings />
+                </a>
+              </Link> */}
             </li>
           ) : (
             <li>
               <Link href="/login">
-                <a>Login</a>
+                <a>
+                  <Icon.LogIn />
+                </a>
               </Link>
             </li>
           )}
           {isLoggedIn ? (
             <li>
               <Link href="/logout">
-                <a>Logout</a>
+                <a>
+                  <Icon.LogOut />
+                </a>
               </Link>
             </li>
           ) : (

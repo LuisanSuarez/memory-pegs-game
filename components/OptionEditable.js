@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useReducer, useCallback } from "react";
 import axios from "axios";
 import Dropzone from "react-dropzone";
+import { Service } from "../utils/DBService";
 import { productionUrlServer, devUrlServer } from "../globalVariables";
 
 const OptionEditable = ({ id }) => {
@@ -9,46 +10,25 @@ const OptionEditable = ({ id }) => {
   const placeholderName = "add a name to this peg";
   //TODO: useReducer?
   const [image, setImage] = useState(placeholderImage);
+  const [iDBEntry, setIDBEntry] = useState({});
   const [pegName, setPegName] = useState(placeholderName);
   let pegNumberStr = id.toString();
 
   pegNumberStr = id > 99 ? pegNumberStr.slice(1) : pegNumberStr;
 
-  useEffect(() => {
-    get({ peg: id });
-  }, []);
-
   const url =
     process.env.NODE_ENV !== "production" ? devUrlServer : productionUrlServer;
-  // productionUrlServer;
-  id == 0 ? console.log(`${process.env.NODE_ENV} url: ${url}`) : "";
 
-  //TODO: refactor as HOCs / 'container component pattern'
-  //TODO: use a container to handle the logic
-  const get = data => {
-    axios
-      .get(url + "getImageUrl", {
-        params: data
-      })
+  useEffect(() => {
+    id == 0 ? console.log(`${process.env.NODE_ENV} url: ${url}`) : "";
+    Service.get(pegNumberStr)
       .then(res => {
-        id == 0 ? console.log(res) : " ";
-        setImage(
-          res.data.data[0].imageURL
-            ? res.data.data[0].imageURL
-            : placeholderImage
-        );
-        setPegName(
-          res.data.data[0].pegName ? res.data.data[0].pegName : placeholderName
-        );
+        setIDBEntry(res);
+        setImage(res.image);
+        setPegName(res.pegName);
       })
-      .catch(err => {
-        if (id == 0) {
-          console.log("Error:", err);
-        } else {
-          console.log("Err");
-        }
-      });
-  };
+      .catch(err => console.log("Error:", err));
+  }, []);
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -60,11 +40,11 @@ const OptionEditable = ({ id }) => {
       .put(url + "updateData", data)
       .then(res => {
         const pegName = JSON.parse(res.config.data).pegName;
-        console.log("pegName:", pegName);
         setPegName(pegName);
+        Service.add({ ...iDBEntry, pegName: pegName }, pegNumberStr);
       })
       .catch(err => {
-        peg.console.log(err);
+        console.log(err);
       });
   };
 
@@ -110,6 +90,7 @@ const OptionEditable = ({ id }) => {
           .put(serverUrl + "updateData", data)
           .then(res => {
             const imageURL = JSON.parse(res.config.data).imageURL;
+            Service.setFileToIndexedDB(pegNumberStr, url, pegName);
             setImage(imageURL);
           })
           .catch(err => {

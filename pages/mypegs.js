@@ -1,21 +1,8 @@
 import React from "react";
 import SecureTemplate from "../static/secure-template";
 import OptionEditable from "../components/OptionEditable";
-import axios from "axios";
-import { productionUrlServer, devUrlServer } from "../globalVariables";
 
-const PegsDisplay = ({ loggedInUser }) => {
-  const url =
-    process.env.NODE_ENV !== "production" ? devUrlServer : productionUrlServer;
-  console.log("setting pegs");
-  // axios
-  //   .post(url + "setCollection", loggedInUser)
-  //   .then(res => console.log(res))
-  //   .catch(err => {
-  //     console.log("ERROR");
-  //     console.log(err);
-  //   });
-
+const PegsDisplay = () => {
   return (
     <>
       <h1> My Pegs!</h1>

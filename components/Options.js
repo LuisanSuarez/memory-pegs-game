@@ -36,10 +36,10 @@ const Options = ({
   const createOptions = optionsAmount => {
     let options = [];
     let optionNumbers = [];
-    let randomNumber = Math.round(Math.random() * 110);
+    let randomNumber = Math.round(Math.random() * 10);
     for (let i = 0; i < optionsAmount - 1; i++) {
       do {
-        randomNumber = Math.round(Math.random() * 110);
+        randomNumber = Math.round(Math.random() * 10);
       } while (randomNumber === answer || randomNumber in optionNumbers);
       optionNumbers.push(randomNumber);
       options.push(

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+// import axios from "axios";
 import { SIZE, SPACING, COLOR, FONT_SIZE } from "../assets/css/globalStyles";
 import { productionUrlServer, devUrlServer } from "../globalVariables";
+import { Service } from "../utils/DBService";
 
 // import placeholderImage from '../assets/img/placeholder.jpg'
 
@@ -56,35 +57,19 @@ const Option = ({ answer, id, sendAnswer }) => {
   answerStr = answer > 99 ? answerStr.slice(1) : answerStr;
 
   useEffect(() => {
-    console.log("USING EFFECT FOR ID:", id);
     setShowPegName(false);
-    get({ peg: answer });
+    get({ peg: answerStr });
   }, [id]);
+
   const url =
     process.env.NODE_ENV !== "production" ? devUrlServer : productionUrlServer;
-  const get = data => {
-    axios
-      .get(url + "getImageUrl", {
-        params: data
-      })
-      .then(res => {
-        console.log("running:", res);
-        const receivedData = res.data.data[0];
-        if (receivedData) {
-          setImage(res.data.data[0].imageURL);
-          setPegName(res.data.data[0].pegaName);
-          console.log("receoved:", res.data);
-        } else {
-          setPegName("peg name");
-          setImage(placeholderImage);
-          setShowPegName(true);
-          console.log("not received:", res.data);
-        }
-      })
-      .catch(err => {
-        setShowPegName(true);
-        console.log("Error:", err);
-      });
+  console.log(`${process.env.NODE_ENV}: ${url}`);
+
+  const get = async data => {
+    const img = await Service.get(data.peg)
+      .then(res => res.image)
+      .catch(err => placeholderImage);
+    setImage(img);
   };
   return (
     <div onPointerDown={() => sendAnswer(answer)} style={optionCSS}>
