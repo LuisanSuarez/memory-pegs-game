@@ -13,6 +13,7 @@ const url =
   process.env.NODE_ENV !== "production" ? devUrlServer : productionUrlServer;
 
 const loadPegImages = () => {
+  console.log("running before or after?");
   let data;
   for (let id = 0; id < 110; id++) {
     data = { peg: id };
