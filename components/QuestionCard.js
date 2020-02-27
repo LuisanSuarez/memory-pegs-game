@@ -9,13 +9,21 @@ const questionCard = {
 
 const questionCSS = {
   fontSize: FONT_SIZE.H1,
-  color: COLOR.support1ColorLightest,
+  color: COLOR.support1Color,
   margin: "auto",
-  padding: SPACING.XL
+  marginTop: SPACING.XL,
+  padding: SPACING.XL + " " + SPACING.XL + " " + SPACING.LG,
+  zIndex: 2,
+  height: "90px"
 };
 
-const QuestionCard = ({ ...props }) => {
-  const { questionNumber, userAnswer, nextCard } = props;
+const nextCardCSS = {
+  position: "absolute",
+  bottom: "30px",
+  right: "50px"
+};
+
+const QuestionCard = ({ questionNumber, userAnswer, nextCard }) => {
   let questionNumberString = questionNumber.toString();
   questionNumberString =
     questionNumber > 99 ? questionNumberString.slice(1) : questionNumberString;
@@ -23,14 +31,17 @@ const QuestionCard = ({ ...props }) => {
   if (questionNumber === userAnswer) {
     return (
       <div style={questionCard}>
-        <h1> Correct Answer!</h1>
-        <div onPointerDown={() => nextCard()}>Next Card</div>
+        <h1 style={questionCSS} onPointerDown={() => nextCard()}>
+          ✓
+        </h1>
+        <div style={nextCardCSS} onPointerDown={() => nextCard()}>
+          Next Card
+        </div>
       </div>
     );
   }
   return (
     <div style={questionCard}>
-      {/* <h1>A React QuestionCard</h1> */}
       <h1 style={questionCSS}>{questionNumberString}</h1>
     </div>
   );

@@ -1,18 +1,28 @@
 import React from "react";
 import Header from "../components/Header";
 import { getTokenForBrowser, getTokenForServer } from "../static/auth";
-import { COLOR } from "../assets/css/globalStyles";
+import { COLOR, CSS_IMG } from "../assets/css/globalStyles";
 
 const templateCSS = {
-  background: COLOR.mainColorDark,
+  backgroundImage: `u rl("../../../assets/css/img/Background.jpg")`,
   width: "100%",
   minHeight: "100vh",
   position: "absolute",
-  left: 0
+  left: 0,
+  top: 0,
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center"
 };
 
 export default Page =>
   class SecureTemplate extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = {
+        image: ""
+      };
+    }
     static async getInitialProps({ req }) {
       const loggedInUser = process.browser
         ? await getTokenForBrowser()
@@ -24,6 +34,10 @@ export default Page =>
         loggedInUser,
         isLoggedIn: !!loggedInUser
       };
+    }
+
+    componentDidMount() {
+      this.setState({ image: "../../../assets/css/img/Background.jpg" });
     }
 
     render() {
@@ -39,6 +53,11 @@ export default Page =>
       }
       return (
         <div style={templateCSS}>
+          <img
+            src={
+              "https://res.cloudinary.com/luisan/image/upload/v1582779420/Background_t6jy6n.jpg"
+            }
+          />
           <Header {...this.props} />
           <Page {...this.props} />
         </div>

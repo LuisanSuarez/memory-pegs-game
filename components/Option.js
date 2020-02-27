@@ -8,12 +8,13 @@ import { Service } from "../utils/DBService";
 
 const optionCSS = {
   position: "relative",
-  width: SIZE.cardWidth,
-  height: SIZE.cardHeight,
+  width: SIZE.vhPercentTo225px,
+  height: SIZE.vhPercentTo225px,
   borderRadius: SPACING.SM,
-  background: COLOR.mainColorLightest,
+  background: COLOR.thirtyPCLight,
   margin: `${SPACING.SM} 0`,
-  boxShadow: `${SPACING.XS} ${SPACING.XS} ${COLOR.mainColorLighter}`
+  border: `5px solid ${COLOR.thirtyPC}`
+  // boxShadow: `${SPACING.XS} ${SPACING.XS} ${COLOR.mainColorLighter}`
 };
 
 const imageCSS = {
@@ -46,15 +47,15 @@ const hideAnswerStrCSS = {
 };
 
 //TODO: destructure here
-const Option = ({ answer, id, sendAnswer }) => {
+const Option = ({ pegNumber, id, sendAnswer, refocusKeyboardDiv }) => {
   const placeholderImage =
     "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.ebayimg.com%2Fimages%2Fi%2F172778278123-0-1%2Fs-l1000.jpg&f=1&nofb=1";
   const [image, setImage] = useState(placeholderImage);
   const [pegName, setPegName] = useState("peg name");
   const [showPegName, setShowPegName] = useState(false);
 
-  let answerStr = answer.toString();
-  answerStr = answer > 99 ? answerStr.slice(1) : answerStr;
+  let answerStr = pegNumber.toString();
+  answerStr = pegNumber > 99 ? answerStr.slice(1) : answerStr;
 
   useEffect(() => {
     setShowPegName(false);
@@ -63,7 +64,12 @@ const Option = ({ answer, id, sendAnswer }) => {
 
   const url =
     process.env.NODE_ENV !== "production" ? devUrlServer : productionUrlServer;
-  console.log(`${process.env.NODE_ENV}: ${url}`);
+  // console.log(`${process.env.NODE_ENV}: ${url}`);
+
+  const handlePointerDown = pegNumber => {
+    sendAnswer(pegNumber);
+    refocusKeyboardDiv();
+  };
 
   const get = async data => {
     const img = await Service.get(data.peg)
@@ -72,12 +78,16 @@ const Option = ({ answer, id, sendAnswer }) => {
     setImage(img);
   };
   return (
-    <div onPointerDown={() => sendAnswer(answer)} style={optionCSS}>
+    <div
+      onPointerDown={() => handlePointerDown(pegNumber)}
+      onKeyDown={e => console.log(e.key)}
+      style={optionCSS}
+    >
       <h3 style={showPegName ? showAnswerStrCSS : hideAnswerStrCSS}>
         {pegName}
       </h3>
       <p style={{ display: "none" }}>{id}</p>
-      <img src={image} style={imageCSS} />
+      <img onKeyDown={e => console.log(e.key)} src={image} style={imageCSS} />
     </div>
   );
 };

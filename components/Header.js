@@ -1,26 +1,31 @@
 import Link from "next/link"; //client-side routing components
 import PropTypes from "prop-types";
-import { SPACING } from "../assets/css/globalStyles";
+import { COLOR, SPACING } from "../assets/css/globalStyles";
 import * as Icon from "react-feather";
 // import "../assets/css/header.css";
 
 const headerContainer = {
-  paddingBottom: SPACING.header
+  paddingBottom: SPACING.header,
+  zIndex: 1,
+  height: SPACING.header,
+  width: "100%",
+  display: "flex",
+  justifyContent: "center",
+  position: "fixed",
+  top: "0"
 };
 
 const header = {
-  display: "flex",
-  position: "fixed",
-  width: "99vw",
-  top: "0"
+  width: "840px"
 };
 
 const navItems = {
   display: "flex",
   width: "100%",
   flexDirection: "row",
-  backgroundColor: "orange",
+  backgroundColor: COLOR.thirtyPC,
   margin: 0,
+  padding: 0,
   height: SPACING.header,
   listStyle: "none"
 };

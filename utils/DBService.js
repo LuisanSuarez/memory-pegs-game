@@ -1,3 +1,4 @@
+//mostly stolen from https://blog.jimdhughes.com/indexeddb-react/
 import { openDB } from "idb";
 
 const dbName = "mydbname";
@@ -53,6 +54,7 @@ class DBService {
     return `deleted whole database`;
   }
 
+  //mostly stolen from https://hacks.mozilla.org/2012/02/saving-images-and-files-in-localstorage/
   setFileToIndexedDB(pegNumberStr, imageLink, pegName) {
     var xhr = new XMLHttpRequest(),
       blob,

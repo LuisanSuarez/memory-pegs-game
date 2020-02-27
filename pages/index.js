@@ -55,6 +55,7 @@ const Index = ({ isLoggedIn, loggedInUser }) => {
           console.log(err);
         })
     : console.log("isNotLoggedIn");
+  isLoggedIn ? console.log("logged in :") : console.log("is not logged in");
   return (
     <div>
       Hello, this is the main application.

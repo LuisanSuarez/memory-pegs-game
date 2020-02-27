@@ -18,20 +18,27 @@ export const SPACING = {
 
 export const SIZE = {
   cardWidth: "225px",
-  cardHeight: "225px"
+  cardHeight: "225px",
+  vhPercentTo225px: "35.6%"
 };
 
 //mood is fun, relaxed, soothing
 export const COLOR = {
+  sixtyPC: "#005B82",
+  thirtyPC: "#0bd4af",
+  tenPC: "rgb(255, 245, 64)",
+
+  thirtyPCLight: "#4DDBC1",
+
   mainColor: "#00a2e8",
   mainColorLightest: "#4fcaff",
   mainColorLighter: "#36c2ff",
   mainColorLight: "#1cbbff",
-  mainColorDark: "#007eb5",
+  mainColorDark: "#008ADB",
   mainColorDarker: "#006d9c",
   mainColorDarkest: "#005b82",
 
-  support1Color: "#ffc40f",
+  support1Color: "#fff540",
   support1ColorLightest: "#ffdd75",
   support1ColorLighter: "#ffd75c",
   support1ColorLight: "#ffd142",
@@ -76,8 +83,13 @@ export const FONT_SIZE = {
         @media (max-width: ${BREAKPOINTS.SM}) {
         fontSize: 28px;
       }`,
-  H1: "72px",
+  H1: "82px",
   H3: "36px",
 
   NORMAL: `font-size: 16px;`
+};
+
+export const CSS_IMG = {
+  mainBg:
+    "https://res.cloudinary.com/luisan/image/upload/v1582779420/Background_t6jy6n.jpg"
 };
