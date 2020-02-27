@@ -1,6 +1,10 @@
 //mostly stolen from https://blog.jimdhughes.com/indexeddb-react/
 import { openDB } from "idb";
-
+// var XMLHttpRequest = require("xhr2");
+// var FileAPI = require("file-api"),
+//   File = FileAPI.File,
+//   FileList = FileAPI.FileList,
+//   FileReader = FileAPI.FileReader;
 const dbName = "mydbname";
 const storeName = "store1";
 const version = 1;
@@ -56,52 +60,59 @@ class DBService {
 
   //mostly stolen from https://hacks.mozilla.org/2012/02/saving-images-and-files-in-localstorage/
   setFileToIndexedDB(pegNumberStr, imageLink, pegName) {
-    var xhr = new XMLHttpRequest(),
-      blob,
-      fileReader = new FileReader();
+    if (process.browser) {
+      var xhr = new XMLHttpRequest(),
+        blob,
+        fileReader = new FileReader();
 
-    xhr.open("GET", imageLink, true);
-    // Set the responseType to arraybuffer. "blob" is an option too, rendering manual Blob creation unnecessary, but the support for "blob" is not widespread enough yet
-    xhr.responseType = "arraybuffer";
+      xhr.open("GET", imageLink, true);
+      // Set the responseType to arraybuffer. "blob" is an option too, rendering manual Blob creation unnecessary, but the support for "blob" is not widespread enough yet
+      xhr.responseType = "arraybuffer";
 
-    xhr.addEventListener(
-      "load",
-      function() {
-        if (xhr.status === 200) {
-          // Create a blob from the response
-          blob = new Blob([xhr.response], { type: "image/png" });
+      xhr.addEventListener(
+        "load",
+        function() {
+          if (xhr.status === 200) {
+            // Create a blob from the response
+            blob = new Blob([xhr.response], { type: "image/png" });
 
-          // onload needed since Google Chrome doesn't support addEventListener for FileReader
-          fileReader.onload = function(evt) {
-            // Read out file contents as a Data URL
-            var result = evt.target.result;
-            // Set image src to Data URL
-            // Store Data URL in localStorage
-            var item = {
-              pegNumber: pegNumberStr,
-              image: result,
-              pegName: pegName
+            // onload needed since Google Chrome doesn't support addEventListener for FileReader
+            fileReader.onload = function(evt) {
+              // Read out file contents as a Data URL
+              var result = evt.target.result;
+              // Set image src to Data URL
+              // Store Data URL in localStorage
+              var item = {
+                pegNumber: pegNumberStr,
+                image: result,
+                pegName: pegName
+              };
+              try {
+                Service.add(item, item.pegNumber)
+                  .then(res => {
+                    console.log(
+                      "Successfully stored:",
+                      res == 1 ? res : "a number"
+                    );
+                    return "PIZZA";
+                  })
+                  .catch(err => {
+                    console.log("Error storing:", err);
+                    return "PRUNES";
+                  });
+              } catch (e) {
+                console.log("Storage failed: " + e);
+              }
             };
-            try {
-              Service.add(item, item.pegNumber)
-                .then(res => {
-                  console.log("Successfully stored:", res);
-                })
-                .catch(err => {
-                  console.log("Error storing:", err);
-                });
-            } catch (e) {
-              // console.log("Storage failed: " + e);
-            }
-          };
-          // Load blob as Data URL
-          fileReader.readAsDataURL(blob);
-        }
-      },
-      false
-    );
-    // Send XHR
-    xhr.send();
+            // Load blob as Data URL
+            fileReader.readAsDataURL(blob);
+          }
+        },
+        false
+      );
+      // Send XHR
+      xhr.send();
+    }
   }
 }
 

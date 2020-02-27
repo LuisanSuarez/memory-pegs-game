@@ -12,8 +12,8 @@ const placeholderImage =
 const url =
   process.env.NODE_ENV !== "production" ? devUrlServer : productionUrlServer;
 
-const loadPegImages = () => {
-  console.log("running before or after?");
+const loadPegImages = (runningFrom = "") => {
+  console.log({ runningFrom });
   let data;
   for (let id = 0; id < 110; id++) {
     data = { peg: id };
@@ -24,7 +24,7 @@ const loadPegImages = () => {
         params: data
       })
       .then(res => {
-        id < 3 ? console.log(res) : " ";
+        // id < 3 ? console.log(res) : " ";
         Service.setFileToIndexedDB(
           pegNumberStr,
           res.data.data[0] ? res.data.data[0].imageURL : placeholderImage,
@@ -34,23 +34,27 @@ const loadPegImages = () => {
       .catch(err => {
         if (id == 60) {
           console.log("Error:", err);
-        } else {
+        } else if (id == 61) {
           console.log("Err");
         }
       });
   }
 };
 
+// loadPegImages("outside const Index");
 //TODO: check if the database has already been loaded.
-loadPegImages();
 
 const Index = ({ isLoggedIn, loggedInUser }) => {
   const url =
     process.env.NODE_ENV !== "production" ? devUrlServer : productionUrlServer;
+  console.log({ isLoggedIn, loggedInUser });
   isLoggedIn
     ? axios
         .post(url + "setCollection", loggedInUser)
-        .then(res => console.log(res))
+        .then(res => {
+          loadPegImages("from Inside");
+          console.log(Object.keys(res));
+        })
         .catch(err => {
           console.log("ERROR");
           console.log(err);
