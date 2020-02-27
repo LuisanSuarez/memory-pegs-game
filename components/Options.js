@@ -44,6 +44,10 @@ const Options = ({
     setNewOptions(false);
   }, [newOptions]);
 
+  const url =
+    process.env.NODE_ENV !== "production" ? devUrlServer : productionUrlServer;
+  console.log(`${process.env.NODE_ENV}: ${url}`);
+
   const createOptionNumbers = optionsAmount => {
     let options = [answer];
     let randomNumber = Math.round(Math.random() * range);

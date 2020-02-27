@@ -62,10 +62,6 @@ const Option = ({ pegNumber, id, sendAnswer, refocusKeyboardDiv }) => {
     get({ peg: answerStr });
   }, [id]);
 
-  const url =
-    process.env.NODE_ENV !== "production" ? devUrlServer : productionUrlServer;
-  // console.log(`${process.env.NODE_ENV}: ${url}`);
-
   const handlePointerDown = pegNumber => {
     sendAnswer(pegNumber);
     refocusKeyboardDiv();

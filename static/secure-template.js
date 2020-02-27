@@ -15,6 +15,10 @@ const templateCSS = {
   justifyContent: "center"
 };
 
+const backgroundImageCSS = {
+  position: "fixed"
+};
+
 export default Page =>
   class SecureTemplate extends React.Component {
     constructor(props) {
@@ -57,6 +61,7 @@ export default Page =>
             src={
               "https://res.cloudinary.com/luisan/image/upload/v1582779420/Background_t6jy6n.jpg"
             }
+            style={backgroundImageCSS}
           />
           <Header {...this.props} />
           <Page {...this.props} />
