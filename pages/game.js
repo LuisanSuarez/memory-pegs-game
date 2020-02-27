@@ -4,6 +4,7 @@ import ComboTracker from "../components/ComboTracker";
 import Options from "../components/Options";
 import secureTemplate from "../static/secure-template";
 import { RefreshCcw } from "react-feather";
+import { productionUrlServer } from "../globalVariables";
 
 const gameCSS = {
   outline: "none"
