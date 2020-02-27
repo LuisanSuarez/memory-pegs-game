@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import Option from "./Option";
 import { COLOR, SPACING } from "../assets/css/globalStyles";
-import { random } from "../globalVariables";
+import { random, devUrlServer, productionUrlServer } from "../globalVariables";
 
 const optionsCSS = {
   background: COLOR.mainColorDarker,
