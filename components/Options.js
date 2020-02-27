@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import Option from "./Option";
 import { COLOR, SPACING } from "../assets/css/globalStyles";
+import { random } from "../globalVariables";
 
 const optionsCSS = {
   background: COLOR.mainColorDarker,
@@ -47,6 +48,7 @@ const Options = ({
   const url =
     process.env.NODE_ENV !== "production" ? devUrlServer : productionUrlServer;
   console.log(`${process.env.NODE_ENV}: ${url}`);
+  console.log(random);
 
   const createOptionNumbers = optionsAmount => {
     let options = [answer];
