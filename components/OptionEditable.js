@@ -7,7 +7,7 @@ import "../assets/scss/styles.scss";
 
 const OptionEditable = ({ id, writePermitted, collection }) => {
   const placeholderImage =
-    "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.ebayimg.com%2Fimages%2Fi%2F172778278123-0-1%2Fs-l1000.jpg&f=1&nofb=1";
+    "https://res.cloudinary.com/luisan/image/upload/c_thumb,h_250,w_250/v1583692670/ubzs2tyeurmhxyowwhoi.jpg";
   const placeholderName = "add a name to this peg";
   //TODO: useReducer?
   const [image, setImage] = useState(placeholderImage);
@@ -54,9 +54,6 @@ const OptionEditable = ({ id, writePermitted, collection }) => {
     setPegName(e.target.value);
   };
 
-  // const uploadAcceptedFiles = acceptedFiles => {
-  //   handleFiles(acceptedFiles);
-  // };
   // #################
   //UPLOAD TO CLOUDINARY
   // #################
