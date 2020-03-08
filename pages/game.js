@@ -1,41 +1,29 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import QuestionCard from "../components/QuestionCard";
 import ComboTracker from "../components/ComboTracker";
 import Options from "../components/Options";
 import secureTemplate from "../static/secure-template";
-import { RefreshCcw } from "react-feather";
-import { productionUrlServer } from "../globalVariables";
 
-const gameCSS = {
-  outline: "none"
-};
-
-const Game = () => {
+const Game = ({ collection }) => {
   const [optionsAmount, setOptionsAmount] = useState(4);
   const [range, setRange] = useState(110);
   const [answer, setAnswer] = useState(58);
-  const [correct, setCorrect] = useState("pizza");
-  const [userAnswer, setUserAnswer] = useState(null);
+  const [correct, setCorrect] = useState(false);
   const [newOptions, setNewOptions] = useState(true);
+  const [combo, setCombo] = useState(0);
 
   //on user input
   //setOptionsAmount
-  const sendAnswer = userAnswer => {
-    // console.log("THIS:", this);
-    // console.log("sending answer:", userAnswer);
-    // console.log("correct:", correct);
-    // console.log("userAnswer === answer:", userAnswer === answer);
-    correct != true ? setUserAnswer(userAnswer) : "";
-    correct != true ? setCorrect(userAnswer === answer) : "";
+  const sendAnswer = userGuess => {
+    !correct ? (userGuess === answer ? setCombo(combo + 1) : setCombo(0)) : "";
+    !correct ? setCorrect(userGuess === answer) : "";
   };
 
   const nextCard = () => {
-    console.log("nexting");
     if (correct) {
       setCorrect(false);
-      setUserAnswer(null);
       setNewOptions(true);
-      setAnswer(Math.round(Math.random() * 110));
+      setAnswer(Math.round(Math.random() * range));
     }
   };
 
@@ -43,10 +31,10 @@ const Game = () => {
     <>
       <QuestionCard
         questionNumber={answer}
-        userAnswer={userAnswer}
+        correct={correct}
         nextCard={nextCard}
       />
-      {/* <ComboTracker /> */}
+      <ComboTracker combo={combo} />
       <Options
         optionsAmount={optionsAmount}
         range={range}
@@ -55,6 +43,7 @@ const Game = () => {
         nextCard={nextCard}
         newOptions={newOptions}
         setNewOptions={setNewOptions}
+        collection={collection}
       />
     </>
   );

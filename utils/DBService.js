@@ -5,23 +5,26 @@ import { openDB } from "idb";
 //   File = FileAPI.File,
 //   FileList = FileAPI.FileList,
 //   FileReader = FileAPI.FileReader;
-const dbName = "mydbname";
-const storeName = "store1";
-const version = 1;
 
-const getDB = async (dbName, version, storename) => {
+const dbName = "TINKER-PEGS-DATABASE";
+const version = 3;
+
+const getDB = async storeName => {
   const database = await openDB(dbName, version, {
-    upgrade(database, oldVersion, newVersion, transaction) {
-      const store = database.createObjectStore(storeName);
-      store.put("Hello world!", "Hello");
+    upgrade(database) {
+      const store = database.createObjectStore(storeName, {
+        keyPath: "pegNumber"
+      });
+      store.createIndex("pegNumber", "pegNumber");
     }
   });
+
   return database;
 };
 
 class DBService {
-  async get(key) {
-    const db = await getDB(dbName, version);
+  async get(key, storeName) {
+    const db = await getDB(storeName);
     const result = await db
       .transaction(storeName)
       .objectStore(storeName)
@@ -29,37 +32,63 @@ class DBService {
     return result;
   }
 
-  async add(object, key) {
-    const db = await getDB(dbName, version);
-    const result = await db
-      .transaction(storeName, "readwrite")
-      .objectStore(storeName)
-      .put(object, key);
-    //returns they key used to access the object you just stored
-    return result;
+  async add(object, storeName) {
+    const db = await getDB(storeName);
+    const tx = db.transaction(storeName, "readwrite");
+    const store = tx.objectStore(storeName);
+    store.put(object);
+    return tx.complete;
   }
 
-  async delete(key) {
-    const db = await getDB(dbName, version);
+  async delete(key, storeName) {
+    const db = await getDB(storeName);
     const result = await db
       .transaction(storeName, "readwrite")
       .objectStore(storeName)
       .delete(key);
-    //returns nothing
     return `deleted item with key ${key}`;
   }
 
-  async deleteAll() {
-    const db = await getDB(dbName, version);
+  async deleteAll(storeName) {
+    const db = await getDB(storeName);
     const result = await db
       .transaction(storeName, "readwrite")
       .objectStore(storeName)
       .clear();
-    return `deleted whole database`;
+    return `deleted the entire store`;
+  }
+
+  async storeComplete(storeName) {
+    const db = await getDB(storeName);
+    const tx = db.transaction(storeName);
+    const store = tx.objectStore(storeName);
+    const allKeys = await store.getAllKeys();
+    return !(allKeys.length < 110);
+
+    // var req = indexedDB.open(dbname);
+    // var existed = true;
+    // req.onsuccess = function () {
+    //     req.result.close();
+    //     if (!existed)
+    //         indexedDB.deleteDatabase(dbname);
+    //     callback(existed);
+    // }
+    // req.onupgradeneeded = function () {
+    //     existed = false;
+    // }
+  }
+
+  async copyToNewDatabase(source, targetStore, targetDb) {
+    const db = await getDB(dbName, source);
+    let cursor = await db.transaction(source).store.openCursor();
+    while (cursor) {
+      this.add(cursor.value, targetStore, targetDb);
+      cursor = await cursor.continue();
+    }
   }
 
   //mostly stolen from https://hacks.mozilla.org/2012/02/saving-images-and-files-in-localstorage/
-  setFileToIndexedDB(pegNumberStr, imageLink, pegName) {
+  setFileToIndexedDB(pegNumberStr, imageLink, pegName, storeName) {
     if (process.browser) {
       var xhr = new XMLHttpRequest(),
         blob,
@@ -88,21 +117,10 @@ class DBService {
                 pegName: pegName
               };
               try {
-                Service.add(item, item.pegNumber)
-                  .then(res => {
-                    console.log(
-                      "Successfully stored:",
-                      res == 1 ? res : "a number"
-                    );
-                    return "PIZZA";
-                  })
-                  .catch(err => {
-                    console.log("Error storing:", err);
-                    return "PRUNES";
-                  });
-              } catch (e) {
-                console.log("Storage failed: " + e);
-              }
+                Service.add(item, storeName)
+                  .then(res => {})
+                  .catch(err => {});
+              } catch (e) {}
             };
             // Load blob as Data URL
             fileReader.readAsDataURL(blob);

@@ -34,7 +34,7 @@ export default Page =>
     render() {
       return (
         <div style={templateCSS}>
-          <Header {...this.props} />
+          <Header {...this.props} availableCollections={[]} />
           <Page {...this.props} />
         </div>
       );

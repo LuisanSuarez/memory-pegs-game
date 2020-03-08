@@ -4,12 +4,12 @@ const devUrlServer = "http://localhost:8000/";
 const productionLoginUri = "https://memory-pegs-game.luisangelsc.now.sh/";
 const devLoginUri = "http://localhost:3000";
 
-const random = "shit for commit";
+const defaultCollection = "luisangelsc";
 
 export {
   productionUrlServer,
   devUrlServer,
   productionLoginUri,
   devLoginUri,
-  random
+  defaultCollection
 };

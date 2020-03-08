@@ -3,8 +3,9 @@ import axios from "axios";
 import Dropzone from "react-dropzone";
 import { Service } from "../utils/DBService";
 import { productionUrlServer, devUrlServer } from "../globalVariables";
+import "../assets/scss/styles.scss";
 
-const OptionEditable = ({ id }) => {
+const OptionEditable = ({ id, writePermitted, collection }) => {
   const placeholderImage =
     "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.ebayimg.com%2Fimages%2Fi%2F172778278123-0-1%2Fs-l1000.jpg&f=1&nofb=1";
   const placeholderName = "add a name to this peg";
@@ -12,23 +13,24 @@ const OptionEditable = ({ id }) => {
   const [image, setImage] = useState(placeholderImage);
   const [iDBEntry, setIDBEntry] = useState({});
   const [pegName, setPegName] = useState(placeholderName);
+  const serverUrl =
+    process.env.NODE_ENV !== "production" ? devUrlServer : productionUrlServer;
+
   let pegNumberStr = id.toString();
 
   pegNumberStr = id > 99 ? pegNumberStr.slice(1) : pegNumberStr;
 
-  const url =
-    process.env.NODE_ENV !== "production" ? devUrlServer : productionUrlServer;
-
   useEffect(() => {
-    id == 0 ? console.log(`${process.env.NODE_ENV} url: ${url}`) : "";
-    Service.get(pegNumberStr)
+    Service.get(pegNumberStr, collection)
       .then(res => {
         setIDBEntry(res);
         setImage(res.image);
         setPegName(res.pegName);
       })
-      .catch(err => console.log("Error:", err));
-  }, []);
+      .catch(err => {
+        setImage(placeholderImage);
+      });
+  }, [collection]);
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -37,14 +39,14 @@ const OptionEditable = ({ id }) => {
       pegName: pegName
     };
     axios
-      .put(url + "updateData", data)
+      .put(serverUrl + "updatePegEntry", data)
       .then(res => {
         const pegName = JSON.parse(res.config.data).pegName;
         setPegName(pegName);
-        Service.add({ ...iDBEntry, pegName: pegName }, pegNumberStr);
+        Service.add({ ...iDBEntry, pegName: pegName }, collection);
       })
       .catch(err => {
-        console.log(err);
+        console.log("Image upload error:", err);
       });
   };
 
@@ -52,9 +54,9 @@ const OptionEditable = ({ id }) => {
     setPegName(e.target.value);
   };
 
-  const uploadAcceptedFiles = acceptedFiles => {
-    handleFiles(acceptedFiles);
-  };
+  // const uploadAcceptedFiles = acceptedFiles => {
+  //   handleFiles(acceptedFiles);
+  // };
   // #################
   //UPLOAD TO CLOUDINARY
   // #################
@@ -64,6 +66,7 @@ const OptionEditable = ({ id }) => {
   const unsignedUploadPreset = "jufwcv6o";
 
   // *********** Upload file to Cloudinary ******************** //
+
   function uploadFile(file) {
     const url = `https://api.cloudinary.com/v1_1/${cloudName}/upload`;
     const xhr = new XMLHttpRequest();
@@ -72,25 +75,34 @@ const OptionEditable = ({ id }) => {
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 
     //TODO: add a progress bar (you find it in the original codepen link, up top)
-
     xhr.onreadystatechange = function(e) {
       if (xhr.readyState == 4 && xhr.status == 200) {
         const response = JSON.parse(xhr.responseText);
         const url = response.secure_url;
-        const serverUrl =
-          process.env.NODE_ENV !== "production"
-            ? devUrlServer
-            : productionUrlServer;
+        // const serverUrl =
+        //   process.env.NODE_ENV !== "production"
+        //     ? devUrlServer
+        //     : productionUrlServer;
         const data = {
           peg: id,
           imageURL: url,
           pegName: pegName
         };
+        data.imageURL = data.imageURL
+          .split("upload")
+          .join("upload/c_thumb,h_250,w_250");
+        console.log({ imageUrl: data.imageURL });
         axios
-          .put(serverUrl + "updateData", data)
+          .put(serverUrl + "updatePegEntry", data)
           .then(res => {
             const imageURL = JSON.parse(res.config.data).imageURL;
-            Service.setFileToIndexedDB(pegNumberStr, url, pegName);
+            console.log("res:", imageURL);
+            Service.setFileToIndexedDB(
+              pegNumberStr,
+              imageURL,
+              pegName,
+              collection
+            );
             setImage(imageURL);
           })
           .catch(err => {
@@ -117,9 +129,9 @@ const OptionEditable = ({ id }) => {
   //CLOUDINARY UPLOAD END
   // #############
 
-  return (
+  return writePermitted ? (
     <>
-      <div className="option-card" onPointerDown={() => ""}>
+      <div className="option-card">
         <form
           onSubmit={e => {
             e.preventDefault();
@@ -134,17 +146,9 @@ const OptionEditable = ({ id }) => {
             value={pegName}
           />
         </form>
-        <img
-          src={image}
-          style={{
-            height: "100px",
-            width: "100px",
-            border: "2px solid black",
-            background: "lightgray"
-          }}
-        />
+        <img src={image} className="editable-image" />
         <h4>{pegNumberStr}</h4>
-        <Dropzone onDrop={acceptedFiles => uploadAcceptedFiles(acceptedFiles)}>
+        <Dropzone onDrop={acceptedFiles => handleFiles(acceptedFiles)}>
           {({ getRootProps, getInputProps }) => (
             <section>
               <div {...getRootProps()}>
@@ -154,7 +158,14 @@ const OptionEditable = ({ id }) => {
             </section>
           )}
         </Dropzone>
-        {/* <ImageUpload peg={id} update={get} pegName={pegName} /> */}
+      </div>
+    </>
+  ) : (
+    <>
+      <div className="option-card">
+        <div>{pegName}</div>
+        <img src={image} className="editable-image" />
+        <h4>{pegNumberStr}</h4>
       </div>
     </>
   );

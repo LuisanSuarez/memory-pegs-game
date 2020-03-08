@@ -1,32 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import Option from "./Option";
-import { COLOR, SPACING } from "../assets/css/globalStyles";
-import { random, devUrlServer, productionUrlServer } from "../globalVariables";
-
-const optionsCSS = {
-  background: COLOR.mainColorDarker,
-  display: "flex",
-  flexWrap: "wrap",
-  alignItems: "center",
-  justifyContent: "space-around",
-  width: `calc(100vh - ${SPACING.header})`,
-  height: `calc(100vh - ${SPACING.header})`,
-  position: "absolute",
-  top: SPACING.header,
-  left: 0,
-  right: 0,
-  margin: "0 auto",
-  boxSizing: "border-box",
-  padding: SPACING.MD
-};
-
-const keyboardOptionsCSS = {
-  position: "fixed",
-  height: "100vh",
-  width: "100vw",
-  top: 0,
-  outline: "none"
-};
+import "../assets/scss/styles.scss";
 
 const Options = ({
   optionsAmount,
@@ -35,20 +9,15 @@ const Options = ({
   sendAnswer,
   nextCard,
   newOptions,
-  setNewOptions
+  setNewOptions,
+  collection
 }) => {
-  const [optionNumbers, setOptionNumbers] = useState([]);
-  const keyboardDiv = useRef(null);
+  const [optionInts, setOptionInts] = useState([]);
 
   useEffect(() => {
-    newOptions ? setOptionNumbers(createOptionNumbers(optionsAmount)) : "";
+    newOptions ? setOptionInts(createOptionNumbers(optionsAmount)) : "";
     setNewOptions(false);
   }, [newOptions]);
-
-  const url =
-    process.env.NODE_ENV !== "production" ? devUrlServer : productionUrlServer;
-  console.log(`${process.env.NODE_ENV}: ${url}`);
-  console.log(random);
 
   const createOptionNumbers = optionsAmount => {
     let options = [answer];
@@ -59,6 +28,12 @@ const Options = ({
       } while (randomNumber === answer || options.indexOf(randomNumber) > -1);
       options.push(randomNumber);
     }
+
+    //functional components re-render on every change to the DOM - feb21
+    //te recordas que we used to declare the Components here, and the state values
+    //being passed down seem to freeze? (ya no cuando los declaramos al momento en el return)
+    //miremos si es por closure
+    //also this: https://reactjs.org/docs/faq-functions.html
     shuffleArray(options);
 
     return options;
@@ -72,23 +47,23 @@ const Options = ({
   };
 
   const handleKeyDown = e => {
-    console.table(e.key);
+    // console.table(e.key);
     switch (e.key) {
       case "q":
       case "Q":
-        sendAnswer(optionNumbers[0]);
+        sendAnswer(optionInts[0]);
         break;
       case "w":
       case "W":
-        sendAnswer(optionNumbers[1]);
+        sendAnswer(optionInts[1]);
         break;
       case "s":
       case "D":
-        sendAnswer(optionNumbers[2]);
+        sendAnswer(optionInts[2]);
         break;
       case "d":
       case "D":
-        sendAnswer(optionNumbers[3]);
+        sendAnswer(optionInts[3]);
         break;
       case "Enter":
         nextCard();
@@ -96,29 +71,20 @@ const Options = ({
     }
   };
 
-  const reFocusKeyboardDiv = () => {
-    console.log("running:", keyboardDiv);
-    keyboardDiv.current.focus();
-    // document.body.focus();
-    console.log("ran:", document.activeElement);
-  };
   return (
     <>
       <div
-        style={keyboardOptionsCSS}
+        class="options-keyboard"
         onKeyDown={e => handleKeyDown(e)}
         tabIndex="0"
-        onClick={sendAnswer}
-        ref={keyboardDiv}
-        // onBlur={keyboardDiv.current ? keyboardDiv.current.focus() : ""}
       ></div>
-      <div style={optionsCSS}>
-        {optionNumbers.map(number => (
+      <div className="options" tabIndex="0" onKeyDown={e => handleKeyDown(e)}>
+        {optionInts.map(number => (
           <Option
             id={number}
             pegNumber={number}
             sendAnswer={sendAnswer}
-            refocusKeyboardDiv={reFocusKeyboardDiv}
+            collection={collection}
           />
         ))}
       </div>

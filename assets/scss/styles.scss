@@ -1,0 +1,202 @@
+@import 'variables';
+
+
+.question {
+    font-size: $font-h1;
+    color: $color-highlight;
+    margin: auto;
+}
+
+.question-card {
+    position: absolute;
+    left: 50%;
+    top: 53%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+}
+
+.next-card {
+    position: absolute;
+    bottom: 30px;
+    right: 50px;
+}
+
+.options {
+    outline: none;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-around;
+    width: calc(100vh - #{$header-height});
+    height: calc(100vh - #{$header-height});
+    position: absolute;
+    top: $header-height;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    box-sizing: border-box;
+    padding: $spacing-md
+}
+
+.options-keyboard {
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    top: 0;
+    outline: none;
+}
+
+
+.header-container {
+    z-index: 1;
+    height: $header-height;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    position: fixed;
+    top: 0;
+}
+
+
+.nav {
+    width: 840px;
+    display: flex;
+    position: relative;
+}
+
+;
+
+.nav-items {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    background-color: $color-secondary;
+    margin: 0;
+    padding: 0;
+    height: $header-height;
+    list-style: none
+}
+
+;
+
+.dropdown {
+    border: 1px solid $color-primary;
+
+    position: absolute;
+    right: 4%;
+    top: $spacing-sm;
+    height: $selection-height;
+    overflow: hidden;
+    transition: height .2s ease-in-out;
+
+    &:hover {
+        height: calc(#{$selection-height}*5);
+        transition: height .35s ease-in-out;
+    }
+}
+
+;
+
+.selection {
+    color: white;
+    font-weight: bold;
+    background: #0A0A0A;
+    box-sizing: border-box;
+    height: $selection-height;
+    width: $selection-width;
+    padding-left: $spacing-md;
+    display: flex;
+    align-items: center;
+    border: 1px solid white;
+}
+
+.option {
+    position: relative;
+    width: $vh-percent-to-225px;
+    height: $vh-percent-to-225px;
+    border-radius: $spacing-sm;
+    background: $color-secondary-light;
+    margin: $spacing-sm 0;
+    border: 5px solid $color-secondary
+}
+
+;
+
+.image {
+    height: 100%;
+    width: 100%;
+    border-radius: $spacing-sm
+}
+
+;
+
+.show-answer-str {
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    bottom: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    font-size: $font-h3;
+    background: rgba(255, 255, 255, 0.75);
+    border-radius: $spacing-sm;
+    height: 95%;
+    //we can set height and width props to create a box; instead
+    //of covering the whole image with a white filter
+}
+
+;
+
+.hide-answer-str {
+    display: none;
+}
+
+;
+
+.editable-image {
+    height: 100px;
+    width: 100px;
+    border: 2px solid black;
+    background: lightgray;
+}
+
+.template,
+.template-background {
+    width: 100%;
+    min-height: 100vh;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.template-background {
+    background-image: url("https://res.cloudinary.com/luisan/image/upload/v1582779420/Background_t6jy6n.jpg");
+    z-index: -10;
+    position: fixed;
+}
+
+;
+
+.background-image {
+    position: fixed;
+}
+
+;
+
+// .pegs {
+//     display: flex;
+
+//     // overflow: hidden;
+//     flex-wrap: wrap;
+// }
+
+// .peg-group {
+//     width: 40%;
+//     height: 80px;
+//     // overflow: hidden;
+//     margin: 10px
+// }

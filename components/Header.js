@@ -1,40 +1,19 @@
 import Link from "next/link"; //client-side routing components
 import PropTypes from "prop-types";
-import { COLOR, SPACING } from "../assets/css/globalStyles";
 import * as Icon from "react-feather";
-// import "../assets/css/header.css";
+import "../assets/scss/styles.scss";
 
-const headerContainer = {
-  paddingBottom: SPACING.header,
-  zIndex: 1,
-  height: SPACING.header,
-  width: "100%",
-  display: "flex",
-  justifyContent: "center",
-  position: "fixed",
-  top: "0"
-};
-
-const header = {
-  width: "840px"
-};
-
-const navItems = {
-  display: "flex",
-  width: "100%",
-  flexDirection: "row",
-  backgroundColor: COLOR.thirtyPC,
-  margin: 0,
-  padding: 0,
-  height: SPACING.header,
-  listStyle: "none"
-};
-
-const Header = ({ isLoggedIn }) => {
+const Header = ({
+  isLoggedIn,
+  availableCollections,
+  setCollection,
+  collection
+}) => {
+  console.log({ isLoggedIn, availableCollections, setCollection });
   return (
-    <div style={headerContainer}>
-      <nav style={header}>
-        <ul style={navItems}>
+    <div className="header-container">
+      <nav className="nav">
+        <ul className="nav-items">
           <li>
             <Link href="/">
               <a>
@@ -58,13 +37,20 @@ const Header = ({ isLoggedIn }) => {
           </li>
           {isLoggedIn ? (
             <li>
-              {/* <Link href="/settings">
+              <Link href="/logout">
                 <a>
-                  <Icon.Settings />
+                  <Icon.LogOut />
                 </a>
-              </Link> */}
+              </Link>
             </li>
           ) : (
+            // <li>
+            //   {/* <Link href="/settings">
+            //     <a>
+            //       <Icon.Settings />
+            //     </a>
+            //   </Link> */}
+            // </li>
             <li>
               <Link href="/login">
                 <a>
@@ -73,18 +59,23 @@ const Header = ({ isLoggedIn }) => {
               </Link>
             </li>
           )}
-          {isLoggedIn ? (
-            <li>
-              <Link href="/logout">
-                <a>
-                  <Icon.LogOut />
-                </a>
-              </Link>
-            </li>
-          ) : (
-            ""
-          )}
         </ul>
+        {isLoggedIn ? (
+          <div class="dropdown" class="dropdown">
+            <div className="selection">{collection}</div>
+            {availableCollections.map(collection => (
+              <div
+                onClick={() => setCollection(collection)}
+                value={collection}
+                className="selection"
+              >
+                {collection}
+              </div>
+            ))}
+          </div>
+        ) : (
+          ""
+        )}
       </nav>
     </div>
   );

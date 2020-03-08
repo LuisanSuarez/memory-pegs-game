@@ -1,14 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
+import * as Icon from "react-feather";
 
+const ComboTracker = ({ combo }) => {
+  const [maxScore, setMaxScore] = useState(0);
+  useEffect(() => {
+    setMaxScore(Math.max(combo, maxScore));
+  }, [combo]);
+  return (
+    <>
+      <h1 style={{ marginTop: "80px" }}>A React ComboTracker</h1>
+      <h3>Top Score: {maxScore}</h3>
+      <div className="combo-bar">
+        {[...Array(combo)].map((i, v) => (
+          <Icon.Star />
+        ))}
+      </div>
+    </>
+  );
+};
 
-const ComboTracker = () => {
-    const [optionsAmount, setOptionsAmount] = useState(4);
-
-    return (
-        <>
-            <h1>A React ComboTracker</h1>
-        </>
-        )
-}
-
-export default ComboTracker
+export default ComboTracker;

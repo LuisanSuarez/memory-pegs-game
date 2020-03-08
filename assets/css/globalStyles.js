@@ -6,6 +6,8 @@ export const BREAKPOINTS = {
 
 export const SPACING = {
   header: "50px",
+  selectionHeight: "33px",
+  selectionWidth: "144px",
   XXS: "2px",
   XS: "4px",
   SM: "10px",

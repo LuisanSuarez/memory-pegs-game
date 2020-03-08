@@ -5,6 +5,11 @@
 //     new Dotenv()
 //   ]
 // };
+
+const withSass = require("@zeit/next-sass");
+module.exports = withSass({
+  /* config options here */
+});
 node: {
-    child_process: 'empty'
+  child_process: "empty";
 }
