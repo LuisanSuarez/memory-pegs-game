@@ -17,7 +17,7 @@
     "@auth0/auth0-spa-js": "^1.6.2",
     "@auth0/nextjs-auth0": "^0.10.0",
     "@zeit/next-sass": "^1.0.1",
-    "auth0-js": "^9.12.2",
+    "auth0-js": "^9.13.2",
     "axios": "^0.19.1",
     "child_process": "^1.0.2",
     "dropzone": "^5.5.1",
