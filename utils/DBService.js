@@ -6,38 +6,49 @@ import { openDB } from "idb";
 //   FileList = FileAPI.FileList,
 //   FileReader = FileAPI.FileReader;
 
-const dbName = "TINKER-PEGS-DATABASE";
-const version = 3;
+const dbName = "TESTing-DATABASE";
+const version = 1;
 
-const getDB = async storeName => {
+const getDB = async (storeName) => {
+  console.log("getDb storename:", { storeName });
   const database = await openDB(dbName, version, {
     upgrade(database) {
       const store = database.createObjectStore(storeName, {
-        keyPath: "pegNumber"
+        keyPath: "pegNumber",
       });
       store.createIndex("pegNumber", "pegNumber");
-    }
+    },
   });
-
+  console.log({ database });
   return database;
 };
 
+// const db = await openDB('Articles', 1, {
+//   upgrade(db) {
+//     // Create a store of objects
+//     const store = db.createObjectStore('articles', {
+//       // The 'id' property of the object will be the key.
+//       keyPath: 'id',
+//       // If it isn't explicitly set, create a value by auto incrementing.
+//       autoIncrement: true,
+//     });
+//     // Create an index on the 'date' property of the objects.
+//     store.createIndex('date', 'date');
+//   },
+// });
+
 class DBService {
   async get(key, storeName) {
+    console.log({ key, storeName });
     const db = await getDB(storeName);
-    const result = await db
-      .transaction(storeName)
-      .objectStore(storeName)
-      .get(key);
+    const result = await db.get(storeName, key);
     return result;
   }
 
   async add(object, storeName) {
     const db = await getDB(storeName);
-    const tx = db.transaction(storeName, "readwrite");
-    const store = tx.objectStore(storeName);
-    store.put(object);
-    return tx.complete;
+    const result = await db.put(storeName, object);
+    return result;
   }
 
   async delete(key, storeName) {
@@ -60,6 +71,7 @@ class DBService {
 
   async storeComplete(storeName) {
     const db = await getDB(storeName);
+    console.log("storeComplete:", db);
     const tx = db.transaction(storeName);
     const store = tx.objectStore(storeName);
     const allKeys = await store.getAllKeys();
@@ -100,13 +112,13 @@ class DBService {
 
       xhr.addEventListener(
         "load",
-        function() {
+        function () {
           if (xhr.status === 200) {
             // Create a blob from the response
             blob = new Blob([xhr.response], { type: "image/png" });
 
             // onload needed since Google Chrome doesn't support addEventListener for FileReader
-            fileReader.onload = function(evt) {
+            fileReader.onload = function (evt) {
               // Read out file contents as a Data URL
               var result = evt.target.result;
               // Set image src to Data URL
@@ -114,12 +126,12 @@ class DBService {
               var item = {
                 pegNumber: pegNumberStr,
                 image: result,
-                pegName: pegName
+                pegName: pegName,
               };
               try {
                 Service.add(item, storeName)
-                  .then(res => {})
-                  .catch(err => {});
+                  .then((res) => {})
+                  .catch((err) => {});
               } catch (e) {}
             };
             // Load blob as Data URL

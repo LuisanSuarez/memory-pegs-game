@@ -8,19 +8,19 @@ const QuestionCard = ({ questionNumber, correct, nextCard }) => {
 
   if (correct) {
     return (
-      <div class="question-card">
-        <h1 class="question" onPointerDown={() => nextCard()}>
+      <div className="question-card">
+        <h1 className="question" onPointerDown={() => nextCard()}>
           ✓
         </h1>
-        <div class="next-card" onPointerDown={() => nextCard()}>
+        <div className="next-card" onPointerDown={() => nextCard()}>
           Next Card
         </div>
       </div>
     );
   }
   return (
-    <div class="question-card">
-      <h1 class="question">{questionNumberString}</h1>
+    <div className="question-card">
+      <h1 className="question">{questionNumberString}</h1>
     </div>
   );
 };

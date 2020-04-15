@@ -7,14 +7,14 @@ import secureTemplate from "../static/secure-template";
 const Game = ({ collection }) => {
   const [optionsAmount, setOptionsAmount] = useState(4);
   const [range, setRange] = useState(110);
-  const [answer, setAnswer] = useState(58);
+  const [answer, setAnswer] = useState(22);
   const [correct, setCorrect] = useState(false);
   const [newOptions, setNewOptions] = useState(true);
   const [combo, setCombo] = useState(0);
 
   //on user input
   //setOptionsAmount
-  const sendAnswer = userGuess => {
+  const sendAnswer = (userGuess) => {
     !correct ? (userGuess === answer ? setCombo(combo + 1) : setCombo(0)) : "";
     !correct ? setCorrect(userGuess === answer) : "";
   };

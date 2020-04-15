@@ -9,10 +9,13 @@ const OptionEditable = ({ id, writePermitted, collection }) => {
   const placeholderImage =
     "https://res.cloudinary.com/luisan/image/upload/c_thumb,h_250,w_250/v1583692670/ubzs2tyeurmhxyowwhoi.jpg";
   const placeholderName = "add a name to this peg";
-  //TODO: useReducer?
+  //useReducer? ans: not worth it. all changes are independent of each other.
+  //I'm also changing primitives, not complex objects. I'd have to build a special
+  //case for each on the reducer, as well as keep special case on any event listener/state change dispatcher
   const [image, setImage] = useState(placeholderImage);
   const [iDBEntry, setIDBEntry] = useState({});
   const [pegName, setPegName] = useState(placeholderName);
+
   const serverUrl =
     process.env.NODE_ENV !== "production" ? devUrlServer : productionUrlServer;
 
@@ -22,35 +25,35 @@ const OptionEditable = ({ id, writePermitted, collection }) => {
 
   useEffect(() => {
     Service.get(pegNumberStr, collection)
-      .then(res => {
+      .then((res) => {
         setIDBEntry(res);
         setImage(res.image);
         setPegName(res.pegName);
       })
-      .catch(err => {
+      .catch((err) => {
         setImage(placeholderImage);
       });
   }, [collection]);
 
-  const handleSubmit = e => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     const data = {
       peg: id,
-      pegName: pegName
+      pegName: pegName,
     };
     axios
       .put(serverUrl + "updatePegEntry", data)
-      .then(res => {
+      .then((res) => {
         const pegName = JSON.parse(res.config.data).pegName;
         setPegName(pegName);
         Service.add({ ...iDBEntry, pegName: pegName }, collection);
       })
-      .catch(err => {
+      .catch((err) => {
         console.log("Image upload error:", err);
       });
   };
 
-  const handleChange = e => {
+  const handleChange = (e) => {
     setPegName(e.target.value);
   };
 
@@ -71,29 +74,25 @@ const OptionEditable = ({ id, writePermitted, collection }) => {
     xhr.open("POST", url, true);
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 
-    //TODO: add a progress bar (you find it in the original codepen link, up top)
-    xhr.onreadystatechange = function(e) {
+    //NICETOHAVE: add a progress bar (you find it in the original codepen link, up top)
+    xhr.onreadystatechange = function (e) {
       if (xhr.readyState == 4 && xhr.status == 200) {
         const response = JSON.parse(xhr.responseText);
         const url = response.secure_url;
-        // const serverUrl =
-        //   process.env.NODE_ENV !== "production"
-        //     ? devUrlServer
-        //     : productionUrlServer;
         const data = {
           peg: id,
           imageURL: url,
-          pegName: pegName
+          pegName: pegName,
         };
+
         data.imageURL = data.imageURL
           .split("upload")
           .join("upload/c_thumb,h_250,w_250");
-        console.log({ imageUrl: data.imageURL });
+
         axios
           .put(serverUrl + "updatePegEntry", data)
-          .then(res => {
+          .then((res) => {
             const imageURL = JSON.parse(res.config.data).imageURL;
-            console.log("res:", imageURL);
             Service.setFileToIndexedDB(
               pegNumberStr,
               imageURL,
@@ -102,13 +101,9 @@ const OptionEditable = ({ id, writePermitted, collection }) => {
             );
             setImage(imageURL);
           })
-          .catch(err => {
+          .catch((err) => {
             id == 1 ? console.log(err) : "";
           });
-        // Create a thumbnail of the uploaded image, with 150px width
-        // TODO: use the thumbnail created here to upload that instead of the huge image ;)))
-        // const tokens = url.split('/');
-        // tokens.splice(-2, 0, 'w_150,c_scale');
       }
     };
     fd.append("upload_preset", unsignedUploadPreset);
@@ -117,7 +112,7 @@ const OptionEditable = ({ id, writePermitted, collection }) => {
     xhr.send(fd);
   }
 
-  const handleFiles = function(files) {
+  const handleFiles = function (files) {
     for (let i = 0; i < files.length; i++) {
       uploadFile(files[i]); // call the function to upload the file
     }
@@ -130,22 +125,22 @@ const OptionEditable = ({ id, writePermitted, collection }) => {
     <>
       <div className="option-card">
         <form
-          onSubmit={e => {
+          onSubmit={(e) => {
             e.preventDefault();
             e.target.blur();
           }}
-          onBlur={e => handleSubmit(e)}
+          onBlur={(e) => handleSubmit(e)}
         >
           <input
             type="text"
-            onChange={e => handleChange(e)}
+            onChange={(e) => handleChange(e)}
             name="pegName"
             value={pegName}
           />
         </form>
         <img src={image} className="editable-image" />
         <h4>{pegNumberStr}</h4>
-        <Dropzone onDrop={acceptedFiles => handleFiles(acceptedFiles)}>
+        <Dropzone onDrop={(acceptedFiles) => handleFiles(acceptedFiles)}>
           {({ getRootProps, getInputProps }) => (
             <section>
               <div {...getRootProps()}>

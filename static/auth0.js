@@ -6,14 +6,11 @@ import { devLoginUri, productionLoginUri } from "../globalVariables";
 
 const clientID = settings.clientID;
 const domain = settings.domain;
-const other = 123;
-//TODO: can we remove parameters from the function, and have just always use
-//clientID and domain? we'd remove argumets from all other functions below
-//non-essential, would just like to try
+
 function webAuth(clientID, domain) {
   return new auth0.WebAuth({
-    clientID: clientID,
-    domain: domain
+    clientID,
+    domain,
   });
 }
 
@@ -24,7 +21,7 @@ function login() {
     redirectUri: `${
       process.env.NODE_ENV !== "production" ? devLoginUri : productionLoginUri
     }/redirect`,
-    scope: "openid profile email"
+    scope: "openid profile email",
   };
 
   console.log("options:", options);

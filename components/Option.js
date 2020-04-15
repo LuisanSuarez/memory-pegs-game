@@ -14,27 +14,27 @@ const Option = ({ pegNumber, id, sendAnswer, collection }) => {
   useEffect(() => {
     console.log("Option changing collection");
     setShowPegName(false);
-    get({ peg: answerStr, collection });
+    collection ? get({ peg: answerStr, collection }) : "";
   }, [id, collection]);
 
-  const handlePointerDown = pegNumber => {
+  const handlePointerDown = (pegNumber) => {
     sendAnswer(pegNumber);
   };
 
-  const get = async data => {
+  const get = async (data) => {
     const img = await Service.get(data.peg, data.collection)
-      .then(res => {
+      .then((res) => {
         setImage(res.image);
         setPegName(res.pegName);
       })
-      .catch(err => {
+      .catch((err) => {
         setPegName("peg name");
         setImage(placeholderImage);
       });
   };
 
   return (
-    <div onPointerDown={() => handlePointerDown(pegNumber)} class="option">
+    <div onPointerDown={() => handlePointerDown(pegNumber)} className="option">
       <h3 className={showPegName ? "show-answer-str" : "hide-answer-str"}>
         {pegName}
       </h3>

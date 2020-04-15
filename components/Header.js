@@ -61,7 +61,7 @@ const Header = ({
           )}
         </ul>
         {isLoggedIn ? (
-          <div class="dropdown" class="dropdown">
+          <div className="dropdown" className="dropdown">
             <div className="selection">{collection}</div>
             {availableCollections.map(collection => (
               <div

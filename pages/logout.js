@@ -8,6 +8,7 @@ export default class extends React.Component {
     deleteToken();
     logout();
     Router.push("/");
+    console.log("did you push game?");
   }
   render() {
     return null;

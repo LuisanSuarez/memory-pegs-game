@@ -74,7 +74,7 @@ const Options = ({
   return (
     <>
       <div
-        class="options-keyboard"
+        className="options-keyboard"
         onKeyDown={e => handleKeyDown(e)}
         tabIndex="0"
       ></div>
